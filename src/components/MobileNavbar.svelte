@@ -1,13 +1,14 @@
-<script>
+<script >
 	//export const ssr = false;
 	import { isMenuOpen } from '../stores/menuStore.js';
 	import { clickOutside } from '../utils/click_outside';
 	import { fly } from 'svelte/transition';
 	import { KeydownEventListener } from '../utils/keydown_action';
 	import { quartOut } from 'svelte/easing';
+    import { beforeNavigate } from '$app/navigation';
+	//import type { BeforeNavigate } from '@sveltejs/kit';
 	//state variables
 	let exception;
-	
 
     //helpers and functions
 	const toggleMenu = () => {
@@ -24,10 +25,6 @@
 		});
 	};
 
-	function handleClickOutsideEvent() {
-		toggleMenu();
-	}
-
 	const handleKeydownEvent = async (event) => {
 		if (event.code === 'Escape') {
 			isMenuOpen.update(() => false);
@@ -38,6 +35,15 @@
 		key: 'Escape',
 		callback: handleKeydownEvent
 	};
+    
+  beforeNavigate((navigation) => {
+      if (navigation.from?.route.id === navigation.to?.route.id) {
+      return;
+      }
+      isMenuOpen.update(() => false);
+  });
+    
+
 </script>
 
 <button id="mobile-menu-button" on:click={toggleMenu} bind:this={exception}>
@@ -52,14 +58,14 @@
 		id="menu-drawer"
 		use:clickOutside={exception}
 		use:KeydownEventListener={options}
-		on:click_outside={handleClickOutsideEvent}
+		on:click_outside={toggleMenu}
 		in:fly={{ duration: 400, x: 300, easing: quartOut }}
 		out:fly={{ duration: 200, x: 300 }}
 	>
 		<div id="menu-wrapper">
 			<nav>
 				<ul>
-					<li><a href="/book-call">Book a Call</a></li>
+					<li><a href="/protected">Protected Route</a></li>
 				</ul>
 				<ul>
 					<li><a href="/about">About</a></li>
