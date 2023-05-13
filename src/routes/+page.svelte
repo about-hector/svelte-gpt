@@ -4,7 +4,11 @@
 </script>
 
 <div class="wrapper">
-	<h1>SvelteKit Auth Example</h1>
+    {#if $page.data.session}
+        <h1>{$page.data.session.user?.name} Pupu</h1>
+    {:else}
+	<h1>Hei BELA sgnoccola</h1>
+    {/if}
 	<p>
 		{#if $page.data.session}
 			{#if $page.data.session.user?.image}

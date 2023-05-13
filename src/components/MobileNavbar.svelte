@@ -1,16 +1,16 @@
-<script >
+<script>
 	//export const ssr = false;
 	import { isMenuOpen } from '../stores/menuStore.js';
 	import { clickOutside } from '../utils/click_outside';
 	import { fly } from 'svelte/transition';
 	import { KeydownEventListener } from '../utils/keydown_action';
 	import { quartOut } from 'svelte/easing';
-    import { beforeNavigate } from '$app/navigation';
+	import { beforeNavigate } from '$app/navigation';
 	//import type { BeforeNavigate } from '@sveltejs/kit';
 	//state variables
 	let exception;
 
-    //helpers and functions
+	//helpers and functions
 	const toggleMenu = () => {
 		const body = document.getElementById('page-body');
 
@@ -35,15 +35,15 @@
 		key: 'Escape',
 		callback: handleKeydownEvent
 	};
-    
-  beforeNavigate((navigation) => {
-      if (navigation.from?.route.id === navigation.to?.route.id) {
-      return;
-      }
-      isMenuOpen.update(() => false);
-  });
-    
 
+	beforeNavigate((navigation) => {
+		if (navigation.from?.route.id === navigation.to?.route.id) {
+			return;
+		}
+		isMenuOpen.update(() => false);
+
+		document.body.classList.remove('no-scroll');
+	});
 </script>
 
 <button id="mobile-menu-button" on:click={toggleMenu} bind:this={exception}>
