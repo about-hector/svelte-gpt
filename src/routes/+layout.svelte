@@ -2,11 +2,13 @@
 	import Navbar from '../components/Navbar.svelte';
 	import Footer from '../components/Footer.svelte';
 	import '../global.css';
-	import { updated } from '$app/stores';
+	import { page, updated } from '$app/stores';
 	import Page from './+page.svelte';
+	import MarqueeStripe from '../components/MarqueeStripe.svelte';
 </script>
 
-<Navbar />
+<MarqueeStripe />
+<Navbar session={$page.data.session}/>
 <!--this checks if a new deployment was made after the user opened the Page
     allowing for him to update the contents as intended by the developer-->
 {#if $updated}

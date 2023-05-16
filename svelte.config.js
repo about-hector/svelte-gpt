@@ -1,7 +1,14 @@
-import { vitePreprocess } from '@sveltejs/kit/vite';
-//import adapter from 'svelte-adapter-deno';
+//default: import adapter from '@sveltejs/adapter-auto';
 import adapter from '@sveltejs/adapter-vercel';
+//in case I want to deploy on Deno/node:
+//import adapter from 'svelte-adapter-deno';
+//import adapter from '@sveltejs/adapter-node';
+import { vitePreprocess } from '@sveltejs/kit/vite';
+
+
+
 /** @type {import('@sveltejs/kit').Config} */
+
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors

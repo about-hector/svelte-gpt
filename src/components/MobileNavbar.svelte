@@ -1,19 +1,21 @@
-<script>
-	//export const ssr = false;
+<script lang="ts">
+	// import stores and routing logic
+	import { page } from '$app/stores';
 	import { isMenuOpen } from '../stores/menuStore.js';
-	import { clickOutside } from '../utils/click_outside';
-	import { fly } from 'svelte/transition';
-	import { KeydownEventListener } from '../utils/keydown_action';
-	import { quartOut } from 'svelte/easing';
 	import { beforeNavigate } from '$app/navigation';
-	//import type { BeforeNavigate } from '@sveltejs/kit';
+	import { signIn, signOut } from '@auth/sveltekit/client';
+	//import my helpers
+	import { clickOutside } from '$lib/click_outside.js';
+	import { KeydownEventListener } from '$lib/keydown_action';
+	//import svelte animation
+	import { fly } from 'svelte/transition';
+	import { quartOut } from 'svelte/easing';
 	//state variables
 	let exception;
 
-	//helpers and functions
-	const toggleMenu = () => {
+	//handlers and functions
+	function toggleMenu() {
 		const body = document.getElementById('page-body');
-
 		isMenuOpen.update((current) => {
 			const nextValue = !current;
 			if (body && nextValue) {
@@ -23,19 +25,15 @@
 			}
 			return nextValue;
 		});
-	};
+	}
 
-	const handleKeydownEvent = async (event) => {
+	const handleKeydownEvent = async (event: KeyboardEvent) => {
 		if (event.code === 'Escape') {
 			isMenuOpen.update(() => false);
 		}
 	};
 
-	const options = {
-		key: 'Escape',
-		callback: handleKeydownEvent
-	};
-
+	// component lifecycle
 	beforeNavigate((navigation) => {
 		if (navigation.from?.route.id === navigation.to?.route.id) {
 			return;
@@ -46,19 +44,40 @@
 	});
 </script>
 
+<!-- MARKUP for the BurgerMenu -->
 <button id="mobile-menu-button" on:click={toggleMenu} bind:this={exception}>
 	{#if $isMenuOpen}
-		X
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+			><path
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M18 6L6 18M6 6l12 12"
+			/></svg
+		>
 	{:else}
-		=
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+			><path
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M3 6h18M3 12h18M3 18h18"
+			/></svg
+		>
 	{/if}
 </button>
+
+<!-- Mobile menu drawer, if isMenuOpen is true a drawer will slide in-->
 {#if $isMenuOpen}
 	<div
 		id="menu-drawer"
 		use:clickOutside={exception}
-		use:KeydownEventListener={options}
-		on:click_outside={toggleMenu}
+		use:KeydownEventListener={{ key: 'Escape', callback: handleKeydownEvent }}
+		on:click_outside={() => toggleMenu()}
 		in:fly={{ duration: 400, x: 300, easing: quartOut }}
 		out:fly={{ duration: 200, x: 300 }}
 	>
@@ -71,21 +90,31 @@
 					<li><a href="/about">About</a></li>
 				</ul>
 			</nav>
-			<button class="menu-button">Log In</button>
+			{#if $page.data.session}
+				<button class="menu-button" on:click={() => signOut()}>Sign Out</button>
+			{:else}
+				<button class="menu-button" on:click={() => signIn()}>Sign In</button>
+			{/if}
 		</div>
 	</div>
 {/if}
 
+<!-- CSS styles -->
 <style>
 	#mobile-menu-button {
-		display: inline-block;
-		padding: 1rem;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
 		z-index: 10;
 		background-color: inherit;
 		border: none;
 		color: inherit;
 		width: 48px;
 		height: 48px;
+	}
+
+	#mobile-menu-button > svg {
+		pointer-events: none;
 	}
 
 	#menu-drawer {

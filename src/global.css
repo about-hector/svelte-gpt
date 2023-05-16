@@ -23,6 +23,7 @@ video {
     --bg-color: #222222;
     --text-color: #ffffff;
     --bg-color-2: #333333;
+    --accent-color: teal;
     --tap-highlight-color: rgba(255, 255, 255, 0.2);
     -webkit-tap-highlight-color: var(--tap-highlight-color);
 }
