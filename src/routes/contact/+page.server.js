@@ -1,5 +1,5 @@
 //import type { Actions } from './$types';
-import ContactFormSubmit from '$lib/contact_form.js' 
+import {ContactFormSubmit} from '$lib/contact_form' 
 
 export const actions = {
     default: async ({ request }) => {
