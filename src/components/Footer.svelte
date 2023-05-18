@@ -4,7 +4,7 @@
 
 <footer>
 	<div class="footer-wrapper">
-		<Newsletter />
+		<Newsletter method="POST" />
 		<div class="footer-links-section">
 			<p>Our Products</p>
 			<a href="/link">Limoni</a>

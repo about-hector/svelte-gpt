@@ -3,7 +3,12 @@
 	import { page } from '$app/stores';
 </script>
 
+
+
+
 <div class="wrapper">
+</div>
+<!--
     <div class="page-heading">
     {#if $page.data.session}
         <h1>{$page.data.session.user?.name} Pupu</h1>
@@ -28,17 +33,14 @@
 			<button on:click={() => signIn('google')}>Sign In with Google</button>
 		{/if}
     </div>	
-</div>
-
+-->
 <style>
 	.wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		margin-block: 2rem;
-        gap: 1rem; 
+        gap: 1rem;
+        font-smooth: auto;
 	}
-    .page-heading {
-        margin-bottom: 2rem; 
-    }
 </style>

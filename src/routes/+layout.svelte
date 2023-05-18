@@ -3,12 +3,11 @@
 	import Footer from '../components/Footer.svelte';
 	import '../global.css';
 	import { page, updated } from '$app/stores';
-	import Page from './+page.svelte';
 	import MarqueeStripe from '../components/MarqueeStripe.svelte';
 </script>
 
 <MarqueeStripe />
-<Navbar session={$page.data.session}/>
+<Navbar session={$page.data.session} />
 <!--this checks if a new deployment was made after the user opened the Page
     allowing for him to update the contents as intended by the developer-->
 {#if $updated}
@@ -17,7 +16,20 @@
 		<span class="update-toast-title">New app version available!</span>
 		<p>Refresh the page to update</p>
 	</div>
-	<button class="refresh-button" on:click={() => location.reload()}> o </button>
+	<button class="refresh-button" on:click={() => location.reload()}>
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+			><g
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				><path d="M21 2v6h-6" /><path d="M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6" /><path
+					d="M21 12a9 9 0 0 1-15 6.7L3 16"
+				/></g
+			></svg
+		>
+	</button>
 </div>
 {/if}
 <main id="body-wrapper">
@@ -36,6 +48,7 @@
 
 	.updated-version-toast {
 		position: absolute;
+        z-index: 100; 
 		right: 2rem;
 		top: 2rem;
 		background-color: #dd3322;
@@ -53,9 +66,9 @@
 	}
 
 	.update-toast-body {
-	    display: flex;
-        flex-direction: column;
-        gap: 0.33rem; 
+		display: flex;
+		flex-direction: column;
+		gap: 0.33rem;
 	}
 
 	.refresh-button {
@@ -67,11 +80,19 @@
 
 	@media (max-width: 40rem) {
 		.updated-version-toast {
-			position: absolute;
+            position: fixed; 
 			bottom: 1.5rem;
 			left: 1.5rem;
 			right: 1.5rem;
 			top: initial;
+
 		}
 	}
+    
+    .refresh-button {
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+    }
+
 </style>

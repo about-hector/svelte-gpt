@@ -1,12 +1,25 @@
+<script lang="ts">
+    export let method: 'POST';  
+   // export let loading: boolean; 
+</script>
+
+
 <div id="newsletter-cta">
 	<p>Subscribe to our Newsletter!</p>
-	<form id="contact-form">
+	<form id="contact-form" {method}>
 		<input
-			type="text"
+			type="email"
 			name="email-input"
 			id="newsletter-input"
 			placeholder="user@mailprovider.com"
+            required
 		/>
+        <input 
+        type='text'
+        name='message-body'
+        required
+        />
+        <!-- disabled={loading}--> 
 		<button type="submit">Join</button>
 	</form>
 </div>

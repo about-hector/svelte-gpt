@@ -32,6 +32,7 @@
 	"type": "module",
 	"dependencies": {
 		"@auth/core": "^0.7.1",
-		"@auth/sveltekit": "^0.3.1"
+		"@auth/sveltekit": "^0.3.1",
+		"@aws-sdk/client-sesv2": "^3.332.0"
 	}
 }

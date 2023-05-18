@@ -2,7 +2,8 @@
 	import MobileNavbar from "./MobileNavbar.svelte";
     import Button from './Button.svelte'
 	import { signIn, signOut } from "@auth/sveltekit/client";
-    export let session: boolean; 
+	import type { Session } from "@auth/core/types";
+    export let session: Session | null; 
 </script>
 
 
