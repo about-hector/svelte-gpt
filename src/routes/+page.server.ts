@@ -9,14 +9,11 @@ export const actions = {
 
 
         if (!message || !sender) {
-            throw Error('Incomplete form submission')
+            throw Error('Incomplete form submission');
         }
         
-        const esito = ContactFormSubmit(sender, message); 
-        if (esito === "Something went wrong") {
-            
-        } else if (esito === 'Email sent'){
+        const esito = await ContactFormSubmit(sender, message);
 
-        }
+        return console.log('Submission Completed!', esito);
     }
 } satisfies Actions; 
