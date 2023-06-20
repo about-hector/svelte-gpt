@@ -2,7 +2,7 @@ import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import { emailTemplate } from './email_templates/contact_form_submission';
 const ses = new SESv2Client({region: 'eu-central-1'});
 //since i'm sandboxed, I can onlu use my own email in FromEmailAddress and ToAddresses
-const awsVerifiedEmail = 'ettoremihaili@gmail.com';
+const awsVerifiedEmail = 'Portfolio@sveltekit <ettoremihaili@gmail.com>';
 
 export async function ContactFormSubmit(sender: string, message: string) {
     
@@ -41,10 +41,16 @@ export async function ContactFormSubmit(sender: string, message: string) {
         console.log('Contact form successfully submitted by: ', sender);
         console.log('Email sent to: ', awsVerifiedEmail);
         console.log('Success: ', data.MessageId);
+        return {
+            success: true,
+        }
     } catch (error) {
         console.error('The contact form submission failed. Error: ', error);
         if (error) {
-            console.log('we screwed!');
+            return {
+                success: false,
+                error: error
+            }
         }
     } 
 

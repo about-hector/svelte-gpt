@@ -7,7 +7,7 @@
 </script>
 
 
-<header class="website-navbar">
+<header class="website-navbar ">
     <div id="website-logo">
         <a href="/" class="logo-link">
         <h1>

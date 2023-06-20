@@ -7,13 +7,19 @@ export const actions = {
         const sender = data.get('email-input')?.toString();
         const message = data.get('message-body')?.toString();
 
-
         if (!message || !sender) {
             throw Error('Incomplete form submission');
         }
-        
+        // await this because it's async 
         const esito = await ContactFormSubmit(sender, message);
-
-        return console.log('Submission Completed!', esito);
+        
+        if(!esito) {
+            return {
+                success: false
+            }
+        }
+        return {
+            success: true
+        }
     }
 } satisfies Actions; 
