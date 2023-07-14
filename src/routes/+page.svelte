@@ -17,7 +17,7 @@
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
-	<ul class="">
+	<ul class="text-white">
 		{#each $messages as message}
 			{#if message.role === 'user'}
 				<li class=" bg-[rgb(52,53,65)] mx-auto">
@@ -53,11 +53,11 @@
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
 					<!-- if the bot is typing, make a stop button appear. If the bot is not typing and at least one answer was given, generate another response-->
 					{#if $isLoading}
-						<button class="py-2 px-3 text-xs bg-black rounded-md" on:click={stop}>
+						<button class="py-2 px-3 text-white text-xs bg-black rounded-md" on:click={stop}>
 							Stop generating answer
 						</button>
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
-						<button class="py-2 px-3 text-xs bg-black rounded-md" on:click={reload}> Regenerate response </button>
+						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={reload}> Regenerate response </button>
 					{/if}
 				</div>
                 {#if $page.data.session}
