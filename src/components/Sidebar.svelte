@@ -5,7 +5,7 @@
 	import type { Session } from '@auth/core/types';
 
 	export let session: Session | null;
-	let sidebarOpen = true;
+	let sidebarOpen = false;
 	function handleSidebar() {
 		sidebarOpen = !sidebarOpen;
 	}

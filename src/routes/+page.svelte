@@ -47,17 +47,17 @@
 	>
 		<form
 			on:submit={handleSubmit}
-			class="relative stretch mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
+			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
-			<div class="relative flex h-full flex-1 items-stretch md:flex-col">
+			<div class="relative flex h-full flex-1 items-stretch flex-row-reverse sm:flex-col">
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
 					<!-- if the bot is typing, make a stop button appear. If the bot is not typing and at least one answer was given, generate another response-->
 					{#if $isLoading}
-						<button class="py-2 px-3 bg-black rounded-md" on:click={stop}>
+						<button class="py-2 px-3 text-xs bg-black rounded-md" on:click={stop}>
 							Stop generating answer
 						</button>
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
-						<button class="py-2 px-3 bg-black rounded-md" on:click={reload}> Regenerate response </button>
+						<button class="py-2 px-3 text-xs bg-black rounded-md" on:click={reload}> Regenerate response </button>
 					{/if}
 				</div>
                 {#if $page.data.session}
@@ -65,8 +65,8 @@
                 {:else}
                 <AutosizingSearchBar bind:value={$input} on:submit={$page.data.session ? () => handleSubmit : () => {window.alert('Logga, scemodimmerda')}}/>
                 {/if}
-               <p class="self-center mt-3 text-slate-200 text-xs">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
 			</div>
+            <p class="self-center text-slate-200 text-xs text-center sm:text-start">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
 		</form>
 	</div>
 </div>
