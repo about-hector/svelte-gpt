@@ -4,7 +4,6 @@
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
-	import { writable } from 'svelte/store';
 
 	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat'
@@ -63,7 +62,7 @@
                 {#if $page.data.session}
 				<AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
                 {:else}
-                <AutosizingSearchBar bind:value={$input} on:submit={$page.data.session ? () => handleSubmit : () => {window.alert('Logga, scemodimmerda')}}/>
+                <AutosizingSearchBar bind:value={$input} on:submit={() => {window.alert('Logga, scemodimmerda')}}/>
                 {/if}
 			</div>
             <p class="self-center text-slate-200 text-xs text-center sm:text-start">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
