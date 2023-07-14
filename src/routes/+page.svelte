@@ -1,9 +1,10 @@
 <script>
 	//import { signIn, signOut } from '@auth/sveltekit/client';
-	//import { page } from '$app/stores';
+	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
+	import { writable } from 'svelte/store';
 
 	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat'
@@ -59,7 +60,11 @@
 						<button class="py-2 px-3 bg-black rounded-md" on:click={reload}> Regenerate response </button>
 					{/if}
 				</div>
+                {#if $page.data.session}
 				<AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
+                {:else}
+                <AutosizingSearchBar bind:value={$input} on:submit={$page.data.session ? () => handleSubmit : () => {window.alert('Logga, scemodimmerda')}}/>
+                {/if}
                <p class="self-center mt-3 text-slate-200 text-xs">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
 			</div>
 		</form>

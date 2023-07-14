@@ -88,7 +88,7 @@
 		<div class="mt-auto">
 			{#if session}
 				<button
-					class="flex w-full gap-2.5 items-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3"
+					class="flex w-full gap-2.5 items-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signOut()}
 				>
 					<img src={session.user?.image} alt="user profile" class="rounded-sm w-7 h-7" />
 					{session?.user?.email}
@@ -110,7 +110,7 @@
 					</svg>
 				</button>
 			{:else}
-				<button class="" on:click={() => signIn()}>Sign In</button>
+				<button class="flex w-full gap-2.5 items-center justify-center bg-green-400/70 transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signIn()}>Sign In</button>
 			{/if}
 		</div>
 	</div>
