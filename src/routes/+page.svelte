@@ -60,7 +60,7 @@
 					{/if}
 				</div>
                 {#if !$page.data.session}
-                <button class='p-3 bg-green-300/70' on:click={() => signIn()}>Logga, coglione</button>
+                <button class='w-full p-3 bg-green-300/70' on:click={() => signIn()}>Logga, coglione</button>
                 {:else}
                 <AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
                 {/if}
