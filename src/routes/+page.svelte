@@ -1,5 +1,5 @@
 <script>
-	//import { signIn, signOut } from '@auth/sveltekit/client';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
@@ -59,10 +59,10 @@
 						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={reload}> Regenerate response </button>
 					{/if}
 				</div>
-                {#if $page.data.session}
-				<AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
+                {#if !$page.data.session}
+                <button class='p-3 bg-green-300/70' on:click={() => signIn()}>Logga, coglione</button>
                 {:else}
-                <AutosizingSearchBar bind:value={$input} on:submit={() => {window.alert('Logga, scemodimmerda')}}/>
+                <AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
                 {/if}
 			</div>
             <p class="self-center text-slate-200 text-xs text-center sm:text-start">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
