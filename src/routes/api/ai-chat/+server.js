@@ -28,6 +28,7 @@ export async function POST({ request }) {
       content: message.content,
       role: message.role
     }))
+    
   })
 
   // Convert the response into a friendly text-stream

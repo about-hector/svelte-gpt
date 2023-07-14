@@ -21,6 +21,10 @@ const config = {
 		adapter: adapter(),
         version: {
             pollInterval: 5000
+        },
+        alias: {
+            'ui': './src/components/ui',
+            'components': './src/components'
         }
 	}
 };

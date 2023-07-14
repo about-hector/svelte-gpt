@@ -1,6 +1,6 @@
 <script lang='ts'>
-	import MobileNavbar from "./MobileNavbar.svelte";
-    import Button from './Button.svelte'
+	import MobileNavbar from "components/MobileNavbar.svelte";
+    import Button from 'components/Button.svelte'
 	import { signIn, signOut } from "@auth/sveltekit/client";
 	import type { Session } from "@auth/core/types";
     export let session: Session | null; 

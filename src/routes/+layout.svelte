@@ -1,10 +1,9 @@
 <script>
-	import Navbar from '../components/Navbar.svelte';
-	import Footer from '../components/Footer.svelte';
+	import Navbar from 'components/Navbar.svelte';
+	import Footer from 'components/Footer.svelte';
 	import '../app.css';
 	import { page, updated } from '$app/stores';
-	import MarqueeStripe from '../components/MarqueeStripe.svelte';
-	import Sidebar from '../components/Sidebar.svelte';
+	import Sidebar from 'components/Sidebar.svelte';
     
     let sidebarOpen = true; 
     function handleSidebar() {
@@ -39,7 +38,7 @@
 	</div>
 {/if}
 <div class="flex w-full h-full relative z-0 overflow-hidden">
-    <Sidebar />	
+    <Sidebar session={$page.data.session}/>	
 	<main class="relative h-full max-w-full flex-1 overflow-hidden flex">
 		<slot />
 	</main>

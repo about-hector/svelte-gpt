@@ -2,9 +2,10 @@
 	//import { signIn, signOut } from '@auth/sveltekit/client';
 	//import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
-	import ProfilePicture from '../components/ProfilePicture.svelte';
+	import ProfilePicture from 'ui/ProfilePicture.svelte';
+	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 
-	const { input, handleSubmit, messages } = useChat({
+	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat'
 	});
 </script>
@@ -26,7 +27,7 @@
 				</li>
 			{:else if message.role === 'assistant'}
 				<li class="bg-[#444654] mx-auto">
-					<div class="flex flex-shrink-0 gap-4  mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
+					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
 						<ProfilePicture user={'assistant'} />
 						<div class="prose whitespace-pre-wrap text-white">
 							{message.content}
@@ -49,32 +50,17 @@
 		>
 			<div class="relative flex h-full flex-1 items-stretch md:flex-col">
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
-					<button class="py-2 px-3 bg-black rounded-md">Regenerate Response</button>
+					<!-- if the bot is typing, make a stop button appear. If the bot is not typing and at least one answer was given, generate another response-->
+					{#if $isLoading}
+						<button class="py-2 px-3 bg-black rounded-md" on:click={stop}>
+							Stop generating answer
+						</button>
+					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
+						<button class="py-2 px-3 bg-black rounded-md" on:click={reload}> Regenerate response </button>
+					{/if}
 				</div>
-				<div
-					class="flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4
-            relative border border-black/10 dark:border-gray-900/50 dark:text-white bg-[rgb(64,65,79)] rounded-xl shadow-xs dark:shadow-xs"
-				>
-					<textarea
-						rows="1"
-						placeholder="Is it possible for a cat to learn how to bark?"
-						bind:value={$input}
-						class="h-7 max-h-52 w-full resize-none bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 overflow-y-hidden md:pr-12 pl-3 focus:ring-offset-0 focus-visible:ring-offset-0 focus:outline-none"
-					/>
-					<button type="submit" class="absolute md:bottom-3 md:right-3 p-2">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 16 16"
-							fill="none"
-							class="h-4 w-4 m-1 md:m-0"
-							stroke-width="2"
-							><path
-								d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z"
-								fill="currentColor"
-							/></svg
-						>
-					</button>
-				</div>
+				<AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
+               <p class="self-center mt-3 text-slate-200 text-xs">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
 			</div>
 		</form>
 	</div>

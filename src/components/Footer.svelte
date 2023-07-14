@@ -1,5 +1,5 @@
 <script>
-	import Newsletter from './Newsletter.svelte';
+	import Newsletter from 'components/Newsletter.svelte';
 </script>
 
 <footer>

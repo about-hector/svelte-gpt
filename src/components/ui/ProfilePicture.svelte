@@ -1,18 +1,20 @@
 <script lang="ts">
+    import { page } from '$app/stores'
     // prop for the component. Given the user session, it will fetch its profile
     // image if one was provided
     export let user: string; 
     let profileImage = '';
     if (user === 'user') {
-        profileImage = '/user-mock.avif'
+        profileImage = `${$page.data.session?.user?.image}`
     } else if (user === 'assistant') {
         profileImage = '/assistant-mock.jpeg'
     }
 </script>
 
-<div class='image-wrapper flex-shrink-0'>
+<div class='w-7 h-7 flex-shrink-0'>
     <img
         alt={`${user}'s profile picture`}
+        class="rounded-sm"
         src={profileImage}
     /> 
 </div>
@@ -24,7 +26,6 @@
     }
 
     img {
-        border-radius: 50%;
         display: inline-block;
         width: 100%; 
     }
