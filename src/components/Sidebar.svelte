@@ -64,7 +64,7 @@
 	</div>
 {:else}
 	<div
-		class="flex-shrink-0 overflow-x-hidden bg-[rgb(32,33,35)] h-full p-2 flex flex-col z-10 absolute"
+		class="flex-shrink-0 overflow-x-hidden bg-[rgb(32,33,35)] h-full p-2 flex flex-col z-10 absolute md:static"
 		style={`width: ${sidebarOpen ? '260px' : '0px'}; visibility: ${sidebarOpen ? null : 'hidden'}`}
 	>
 		<div class="flex flex-row gap-2">
