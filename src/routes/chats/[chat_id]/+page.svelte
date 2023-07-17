@@ -26,6 +26,12 @@
 
 <div class="w-full overflow-y-scroll">
 	<ul class="text-white">
+
+    {#if typeof data.previousConversation === 'string' && data.previousConversation === 'not-signed-in'}
+        <p> Sign In to access conversations </p>
+    {:else if typeof data.previousConversation === 'string' && data.previousConversation === 'not-authorized'}
+        <p> Unauthorized to read this chat </p>
+    {:else}
         {#each data.previousConversation as chat }
             	{#if chat.role === 'user'}
 				<li class=" bg-[rgb(52,53,65)] mx-auto">
@@ -65,6 +71,7 @@
 				</li>
 			{/if}
 		{/each}
+{/if}
 		<div class="h-32 md:h-48 flex-shrink-0" />
 	</ul>
 	<div
