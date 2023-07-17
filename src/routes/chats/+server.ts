@@ -1,7 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
+import { prisma } from '$lib/chatDB'
 interface IMessage {
     id: string,
     createdAt: string,
@@ -9,8 +7,12 @@ interface IMessage {
     role: 'user' | 'assistant' | 'function'
 }
 
+const tokenName = process.env.NODE_ENV === 'development'
+    ? 'next-auth.session-token'
+    : '__Secure-next-auth.session-token'; 
+
 async function getUserID(cookies: any) {
-    const token = cookies.get('next-auth.session-token');
+    const token = cookies.get(tokenName);
     const session = await prisma.session.findUnique({ where: { sessionToken: token } })
     return session?.userId;
 
