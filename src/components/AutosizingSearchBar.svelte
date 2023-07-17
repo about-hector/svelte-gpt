@@ -1,6 +1,7 @@
 <script lang="ts">
     import FluidTextArea from "ui/FluidTextArea.svelte";
     export let value: string;
+    export let isLoading: boolean; 
 </script>
 
 
@@ -16,7 +17,10 @@
 		class="max-h-52 w-full resize-none bg-transparent p-0 pr-10 focus-visible:outline-none md:pr-12 pl-3 "
         on:submit
 	/>
-	<button type="submit" class={`absolute bottom-1.5 sm:bottom-3 right-3  p-1 sm:p-2 rounded-md transition-colors ${value.length > 0 ? 'bg-green-500 text-white' : 'text-slate-500'}`}>
+	
+    <!-- might wanna try if is loading display button otherwise display spinner/three dots animating -->
+
+    <button type="submit" disabled={isLoading} class={`absolute bottom-1.5 sm:bottom-3 right-3  p-1 sm:p-2 rounded-md transition-colors ${value.length > 0 ? 'bg-green-500 text-white' : 'text-slate-500'}`}>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 16 16"

@@ -1,14 +1,39 @@
 <script lang="ts">
 	import { signIn, signOut } from '@auth/sveltekit/client';
-	import { page } from '$app/stores';
 
 	import type { Session } from '@auth/core/types';
-
+	import { onMount } from 'svelte';
+	import ChatBox from 'ui/ChatBox.svelte';
+    
 	export let session: Session | null;
-	let sidebarOpen = false;
+    let chatHistory: IChat[] | null = null; 
+	let sidebarOpen = true;
+
+    interface IChat {
+        id: string, 
+        user_id: string, 
+    }
+    
+
 	function handleSidebar() {
 		sidebarOpen = !sidebarOpen;
 	}
+    
+    // when you use a button instead of an a with href
+    //function handleChatClick(chatID: string) {
+    //    goto(`/chats/${chatID}`);
+    //}
+    
+    async function getChats() {
+        const response = await fetch('/chats');
+        const data = await response.json(); 
+        return data.chats
+    }
+
+    onMount(async () => {
+        const data = await getChats();
+        chatHistory = data;
+    }) 
 </script>
 
 {#if !sidebarOpen}
@@ -43,8 +68,8 @@
 		style={`width: ${sidebarOpen ? '260px' : '0px'}; visibility: ${sidebarOpen ? null : 'hidden'}`}
 	>
 		<div class="flex flex-row gap-2">
-			<div class="border w-full rounded-md border-white/20 p-3 text-sm h-11">
-				<button class="flex items-center gap-3">
+			<div class="border w-full rounded-md border-white/20 text-sm h-11">
+				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)]" href={'/'}>
 					<svg
 						stroke="currentColor"
 						fill="none"
@@ -59,7 +84,7 @@
 						><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg
 					>
 					New chat
-				</button>
+				</a>
 			</div>
 			<button
 				on:click={handleSidebar}
@@ -85,6 +110,24 @@
 				>
 			</button>
 		</div>
+
+        <!-- previous chats -->
+        <div class="box-border flex-col overflow-y-auto gap-2 flex-1 -mr-2 mt-4">
+        <div class='flex flex-col gap-2 text-sm text-gray-100 pb-2 mr-2'>
+        <p class='px-2 text-sm font-bold'>Previous Chats</p>
+        
+        <!-- chat history -->
+        {#if chatHistory}
+            {#each chatHistory as chat}
+                <ChatBox id={chat.id} /> 
+            {/each}
+        {:else}
+            <p>No Chats</p>
+        {/if}
+
+        </div>
+        </div>
+
 		<div class="mt-auto">
 			{#if session}
 				<button
