@@ -1,28 +1,22 @@
 <script>
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { signIn } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
-
+	import { onMount } from 'svelte';
+    
+    export let data;
 
 	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-        onFinish: async (message) => {
-
-            const saveChat = await fetch('/chats', {
-               method: 'POST', 
-               body: JSON.stringify($messages),
-               headers: {
-                'Content-type': 'application/json'
-                },
-            })
-            
-            const data = await saveChat.json();
-            //make a store so I can push the new chat to it and optimistically update the ui 
-
+        //initialMessages: chatHistory,
+        onFinish: (message) => {
         }
 	});
+    onMount(() => {
+        console.log(data.previousConversation)
+    })
 </script>
 
 <svelte:head>
@@ -32,6 +26,26 @@
 
 <div class="w-full overflow-y-scroll">
 	<ul class="text-white">
+        {#each data.previousConversation as chat }
+            	{#if chat.role === 'user'}
+				<li class=" bg-[rgb(52,53,65)] mx-auto">
+					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
+						<ProfilePicture user={'user'} />
+						{chat.content}
+					</div>
+				</li>
+			{:else if chat.role === 'assistant'}
+				<li class="bg-[#444654] mx-auto">
+					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
+						<ProfilePicture user={'assistant'} />
+						<div class="prose whitespace-pre-wrap text-white">
+							{chat.content}
+						</div>
+					</div>
+				</li>
+			{/if}
+
+        {/each }
 		{#each $messages as message}
 			{#if message.role === 'user'}
 				<li class=" bg-[rgb(52,53,65)] mx-auto">
@@ -85,48 +99,6 @@
 	</div>
 </div>
 
-<!--
-    <div class="page-heading">
-    {#if $page.data.session}
-        <h1>{$page.data.session.user?.name} Pupu</h1>
-    {:else}
-	<h1>Hei BELA sgnoccola</h1>
-    {/if}
-    </div>
-
-    <div class="wrapper">
-		{#if $page.data.session}
-			{#if $page.data.session.user?.image}
-				<span style="background-image: url('{$page.data.session.user.image}')" class="avatar" />
-			{/if}
-			<p><span class="signedInText">
-				<small>Signed in as</small><br />
-				<strong>{$page.data.session.user?.name ?? 'User'}</strong>
-			</span></p>
-			<button on:click={() => signOut()} class="button">Sign out</button>
-		{:else}
-			<span class="notSignedInText">You are not signed in</span>
-			<button on:click={() => signIn('github')}>Sign In with GitHub</button>
-			<button on:click={() => signIn('google')}>Sign In with Google</button>
-		{/if}
-    </div>	
--->
 <style>
-	.wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-block: 2rem;
-		gap: 1rem;
-		font-smooth: auto;
-		max-width: 60rem;
-		overflow: auto;
-	}
-	/* border-t md:border-t-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:bg-vert-light-gradient bg-white dark:bg-gray-800 md:!bg-transparent dark:md:bg-vert-dark-gradient pt-2 md:-left-2 */
-	.input-wrapper {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		left: 0;
-	}
+
 </style>
