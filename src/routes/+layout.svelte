@@ -1,14 +1,13 @@
 <script>
-	import Navbar from 'components/Navbar.svelte';
-	import Footer from 'components/Footer.svelte';
 	import '../app.css';
 	import { page, updated } from '$app/stores';
 	import Sidebar from 'components/Sidebar.svelte';
-    
     let sidebarOpen = true; 
+
     function handleSidebar() {
         sidebarOpen = !sidebarOpen; 
     }
+    
 </script>
 
 <!-- <MarqueeStripe />
@@ -44,7 +43,6 @@
 	</main>
 </div>
 
-<!-- <Footer /> -->
 
 <style>
 	/*this was on the main */

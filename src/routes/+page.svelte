@@ -4,11 +4,10 @@
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
-
-
+    
 	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-        onFinish: async (message) => {
+        onFinish: async () => {
 
             const saveChat = await fetch('/chats', {
                method: 'POST', 
@@ -18,10 +17,13 @@
                 },
             })
             
+            // get the id of the chat back from the db after saving it
             const data = await saveChat.json();
             //make a store so I can push the new chat to it and optimistically update the ui 
 
         }
+
+
 	});
 </script>
 
@@ -67,17 +69,17 @@
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
 					<!-- if the bot is typing, make a stop button appear. If the bot is not typing and at least one answer was given, generate another response-->
 					{#if $isLoading}
-						<button class="py-2 px-3 text-white text-xs bg-black rounded-md" on:click={stop}>
+						<button class="py-2 px-3 text-white text-xs bg-black rounded-md" on:click={() => stop()}>
 							Stop generating answer
 						</button>
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
-						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={reload}> Regenerate response </button>
+						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={() => reload()}> Regenerate response </button>
 					{/if}
 				</div>
                 {#if !$page.data.session}
                 <button class='w-full p-3 bg-green-300/70' on:click={() => signIn()}>Logga, coglione</button>
                 {:else}
-                <AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
+                <AutosizingSearchBar isLoading={$isLoading} bind:value={$input} on:submit={handleSubmit} />
                 {/if}
 			</div>
             <p class="self-center text-slate-200 text-xs text-center sm:text-start">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
