@@ -17,6 +17,18 @@ export async function fetchChat(id: string, userID: string) {
     return chat; 
 }
 
+
+export async function deleteChat(id: string) {
+    const chat = await prisma.chat.delete({
+        where: {
+            id: id,
+        },
+    })
+
+    return chat;
+}
+
+
 const tokenName = process.env.NODE_ENV === 'development'
     ? 'next-auth.session-token'
     : '__Secure-next-auth.session-token'; 
@@ -24,7 +36,7 @@ const tokenName = process.env.NODE_ENV === 'development'
 export async function getUserID(cookies) {
     const token = cookies.get(tokenName);
     if (!token) {
-        return 'not-signed-in'
+        return false;
     }
     const session = await prisma.session.findUnique({ where: { sessionToken: token } })
     return session?.userId;

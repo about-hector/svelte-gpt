@@ -73,8 +73,8 @@ model Message {
     role             String
     content          String   @db.LongText
     createdAt        DateTime
-    chat             Chat     @relation(fields: [chatId], references: [id])
-    chatId           String
+    chat             Chat?     @relation(fields: [chatId], references: [id], onDelete: NoAction)
+    chatId           String?
 
     @@index([chatId])
 }

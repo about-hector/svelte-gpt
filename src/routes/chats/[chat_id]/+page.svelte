@@ -15,37 +15,39 @@
         }
 	});
     onMount(() => {
-        console.log(data.previousConversation)
+        console.log(data.chat)
     })
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Chat title</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
-	<ul class="text-white">
+<ul class="text-white">
 
-    {#if typeof data.previousConversation === 'string' && data.previousConversation === 'not-signed-in'}
+    {#if !data.authentication}
         <p> Sign In to access conversations </p>
-    {:else if typeof data.previousConversation === 'string' && data.previousConversation === 'not-authorized'}
+    {:else if data.authentication && !data.authorized}
         <p> Unauthorized to read this chat </p>
     {:else}
-        {#each data.previousConversation as chat }
+        {#each data.chat as chat }
             	{#if chat.role === 'user'}
-				<li class=" bg-[rgb(52,53,65)] mx-auto">
+				<li class="p-4 text-base bg-[rgb(52,53,65)] mx-auto">
 					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
 						<ProfilePicture user={'user'} />
-						{chat.content}
+                        <!-- <span class='w-[55ch]'>{chat.content}</span> -->
+                        {chat.content}
 					</div>
 				</li>
 			{:else if chat.role === 'assistant'}
-				<li class="bg-[#444654] mx-auto">
-					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
+				<li class="p-4 bg-[#444654] mx-auto">
+					<div class=" flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
 						<ProfilePicture user={'assistant'} />
 						<div class="prose whitespace-pre-wrap text-white">
-							{chat.content}
+                        <!-- <span class='w-[55ch]'>{chat.content}</span> -->
+                        {chat.content}
 						</div>
 					</div>
 				</li>

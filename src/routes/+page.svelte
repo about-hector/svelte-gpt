@@ -1,5 +1,6 @@
 <script>
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	
+    import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
@@ -19,9 +20,8 @@
             
             // get the id of the chat back from the db after saving it
             const data = await saveChat.json();
-            //make a store so I can push the new chat to it and optimistically update the ui 
-
-        }
+            //make a store so I can push the new chat to it and optimistically update the ui        
+    }
 
 
 	});
@@ -114,21 +114,4 @@
     </div>	
 -->
 <style>
-	.wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-block: 2rem;
-		gap: 1rem;
-		font-smooth: auto;
-		max-width: 60rem;
-		overflow: auto;
-	}
-	/* border-t md:border-t-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:bg-vert-light-gradient bg-white dark:bg-gray-800 md:!bg-transparent dark:md:bg-vert-dark-gradient pt-2 md:-left-2 */
-	.input-wrapper {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		left: 0;
-	}
 </style>

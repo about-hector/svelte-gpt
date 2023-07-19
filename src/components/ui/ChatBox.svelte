@@ -1,8 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-
 	export let id: string;
 	$: isActive = $page.url.pathname === `/chats/${id}`;
+
+    async function handleDelete(e, chatID) {
+        const response = await fetch('/chats', {
+            method: 'DELETE',
+            body: JSON.stringify(chatID)
+        })
+        
+        const data = await response.json(); 
+        console.log(data)
+    }
 </script>
 
 <li class="list-none rounded-md text-inherit">
@@ -81,7 +90,7 @@
 					<line x1="12" y1="2" x2="12" y2="15" />
 				</svg>
 			</button> -->
-			<button class="p-1 hover:text-white">
+			<button class="p-1 hover:text-white" on:click={(e) => handleDelete(e, id)}>
 				<svg
 					stroke="currentColor"
 					fill="none"

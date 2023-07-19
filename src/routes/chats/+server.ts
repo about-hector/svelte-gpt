@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getUserID, prisma } from '$lib/chatDB'
+import { deleteChat, getUserID, prisma } from '$lib/chatDB'
 interface IMessage {
     id: string,
     createdAt: string,
@@ -11,9 +11,7 @@ interface IMessage {
 export async function POST({ request, cookies }) {
     const userID = await getUserID(cookies);
     const messages: IMessage[] = await request.json();
-    console.log('userID: ', userID)
-    console.log('messages: ', messages)
-
+    
     if (userID && messages) {
         const newChat = await prisma.chat.create({
             data: {
@@ -52,7 +50,23 @@ export async function GET({ request, cookies }) {
         console.log(chats)
         return json({ chats: chats }, { status: 200 })
     }
+}
 
 
+export async function DELETE({ request, cookies }) {
+    const userID = await getUserID(cookies);
+    const chatID = await request.json();
+    if (!chatID || !userID) {
+        return json({message: 'Invalid chatID'},{status: 400})
+    }
+    
+    const chat = await prisma.chat.delete({
+        where: {
+           id: chatID,
+           user_id: userID
+        }
+    })
+
+    return json({message: 'chat deleted successfully'}, {status: 200})
 
 }

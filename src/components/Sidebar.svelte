@@ -69,7 +69,7 @@
 	>
 		<div class="flex flex-row gap-2">
 			<div class="border w-full rounded-md border-white/20 text-sm h-11">
-				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)]" href={'/'}>
+				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)] transition-colors flex-shrink-0 flex-grow" href={'/'}>
 					<svg
 						stroke="currentColor"
 						fill="none"
