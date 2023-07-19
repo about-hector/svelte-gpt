@@ -65,7 +65,7 @@
 {:else}
 	<div
 		class="flex-shrink-0 overflow-x-hidden bg-[rgb(32,33,35)] h-full p-2 flex flex-col z-10 absolute md:static"
-		style={`width: ${sidebarOpen ? '260px' : '0px'}; visibility: ${sidebarOpen ? null : 'hidden'}`}
+		style={`width: ${sidebarOpen ? '260px' : '0px'}; visibility: ${sidebarOpen ? null : 'hidden'} text-inherit`}
 	>
 		<div class="flex flex-row gap-2">
 			<div class="border w-full rounded-md border-white/20 text-sm h-11">
