@@ -69,7 +69,7 @@
 	>
 		<div class="flex flex-row gap-2">
 			<div class="border w-full rounded-md border-white/20 text-sm h-11">
-				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)]" href={'/'}>
+				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)] text-gray-100" href={'/'}>
 					<svg
 						stroke="currentColor"
 						fill="none"
@@ -88,7 +88,7 @@
 			</div>
 			<button
 				on:click={handleSidebar}
-				class="border border-white/20 flex-shrink-0 p-3 rounded-md transition-colors text-sm hover:bg-[hsl(240,9%,59%,.1)]"
+				class="border border-white/20 flex-shrink-0 p-3 rounded-md transition-colors text-sm text-gray-100 hover:bg-[hsl(240,9%,59%,.1)]"
 			>
 				<svg
 					stroke="currentColor"
@@ -153,7 +153,7 @@
 					</svg>
 				</button>
 			{:else}
-				<button class="flex w-full gap-2.5 items-center justify-center bg-green-400/70 transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signIn()}>Sign In</button>
+				<button class="flex w-full gap-2.5 items-center justify-center bg-green-400/70 transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3 text-gray-100" on:click={() => signIn()}>Sign In</button>
 			{/if}
 		</div>
 	</div>
