@@ -36,7 +36,7 @@
 		</button>
 	</div>
 {/if}
-<div class="flex w-full h-full relative z-0 overflow-hidden">
+<div class="flex w-full h-full relative z-0 overflow-hidden text-inherit">
     <Sidebar session={$page.data.session}/>	
 	<main class="relative h-full max-w-full flex-1 overflow-hidden flex">
 		<slot />

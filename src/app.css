@@ -68,7 +68,7 @@ body {
     overflow: hidden; 
 }
 
-/* everything regarding links */
+/* everything regarding links 
 a:visited {
     color: inherit; 
 }
@@ -76,4 +76,4 @@ a:visited {
 a {
     color: inherit; 
     text-decoration: none;
-}
+}*/
