@@ -32,14 +32,14 @@ video {
     --tap-highlight-color: rgba(255, 255, 255, 0.2);
     -webkit-tap-highlight-color: var(--tap-highlight-color);
 }
-
+/*
 @media (prefers-color-scheme: light) {
     :root {
     --bg-color: #ffffff;
     --text-color: #222222;
     --bg-color-2: #eeeeee; 
     }
-}
+} */
 
 /* *:focus {
     outline: 2px solid #ffffff; 
@@ -68,7 +68,7 @@ body {
     overflow: hidden; 
 }
 
-/* everything regarding links 
+/* everything regarding links */
 a:visited {
     color: inherit; 
 }
@@ -76,4 +76,4 @@ a:visited {
 a {
     color: inherit; 
     text-decoration: none;
-}*/
+}
