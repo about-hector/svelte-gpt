@@ -69,7 +69,7 @@
 	>
 		<div class="flex flex-row gap-2">
 			<div class="border w-full rounded-md border-white/20 text-sm h-11">
-				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)] text-gray-100" href={'/'}>
+				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)]" href={'/'}>
 					<svg
 						stroke="currentColor"
 						fill="none"
@@ -88,7 +88,7 @@
 			</div>
 			<button
 				on:click={handleSidebar}
-				class="border border-white/20 flex-shrink-0 p-3 rounded-md transition-colors text-sm text-gray-100 hover:bg-[hsl(240,9%,59%,.1)]"
+				class="border border-white/20 flex-shrink-0 p-3 rounded-md transition-colors text-sm hover:bg-[hsl(240,9%,59%,.1)]"
 			>
 				<svg
 					stroke="currentColor"
@@ -131,7 +131,7 @@
 		<div class="mt-auto">
 			{#if session}
 				<button
-					class="flex w-full gap-2.5 items-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signOut()}
+					class="flex w-full gap-2 items-center justify-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signOut()}
 				>
 					<img src={session.user?.image} alt="user profile" class="rounded-sm w-7 h-7" />
 					{session?.user?.email}
