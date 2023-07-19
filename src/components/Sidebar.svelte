@@ -113,7 +113,7 @@
 
         <!-- previous chats -->
         <div class="box-border flex-col overflow-y-auto gap-2 flex-1 -mr-2 mt-4">
-        <div class='flex flex-col gap-2 text-sm text-gray-100 pb-2 mr-2'>
+        <div class='flex flex-col gap-1 text-sm text-gray-100 pb-2 mr-2'>
         <p class='px-2 text-sm font-bold'>Previous Chats</p>
         
         <!-- chat history -->
