@@ -70,13 +70,20 @@ model Chat {
 model Message {
     id               String   @id @default(cuid())
     openai_unique_id String
-    role             String
+    role             Role
     content          String   @db.LongText
     createdAt        DateTime
     chat             Chat?     @relation(fields: [chatId], references: [id], onDelete: SetNull)
     chatId           String?
 
     @@index([chatId])
+}
+
+enum Role {
+    system
+    user
+    assistant 
+    function 
 }
 
 // this is because I'm using the same database as another app of mine, so I need to keep the schema

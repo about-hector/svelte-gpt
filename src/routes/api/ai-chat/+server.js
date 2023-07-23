@@ -1,7 +1,7 @@
 import { Configuration, OpenAIApi } from 'openai-edge'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { OPENAI_API_KEY } from '$env/static/private'
-
+import { prisma } from '$lib/chatDB'
 
 //import { env } from '$env/dynamic/private'
 // You may want to replace the above with a static private env variable

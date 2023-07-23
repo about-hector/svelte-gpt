@@ -1,79 +1,68 @@
-<script>
-	import { signIn } from '@auth/sveltekit/client';
+<script lang='ts'>
 	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 	import { onMount } from 'svelte';
-    
-    export let data;
+	import { afterNavigate, goto } from '$app/navigation';
+    import { toasts } from '../../../stores/menuStore';
+	import ChatHistory from 'ui/ChatHistory.svelte';
+	export let data;
 
-	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
+    $: chatID = $page.params.chat_id
+	const { input, setMessages, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-        //initialMessages: chatHistory,
-        onFinish: (message) => {
+		initialMessages: data.chat,
+		onFinish: async () => {
+            const updatedChat = await fetch('/chats', {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    chat: $messages.slice(-2), 
+                    id: chatID
+                }),
+                headers: {
+                'Content-type': 'application/json'
+                },
+            })
+            const chat = await updatedChat.json()
         }
 	});
-    onMount(() => {
-        console.log(data.chat)
+
+
+	onMount(() => {
+        console.log(chatID)
+		if (data.authorized === false && data.redirectTo) {
+			goto(data.redirectTo);
+			toasts.addToast({
+				id: crypto.randomUUID(),
+				title: 'Unauthorized user',
+				message: `Unable to load chat '${data.chatID}'`,
+				type: 'error'
+			});
+            return; 
+		}
+
+	});
+
+    afterNavigate(() => {
+        setMessages(data.chat)
     })
 </script>
 
 <svelte:head>
-	<title>Chat title</title>
+	<title>Chat Title</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
-<ul class="text-white">
-
-    {#if !data.authentication}
-        <p> Sign In to access conversations </p>
-    {:else if data.authentication && !data.authorized}
-        <p> Unauthorized to read this chat </p>
-    {:else}
-        {#each data.chat as chat }
-            	{#if chat.role === 'user'}
-				<li class="p-4 text-base bg-[rgb(52,53,65)] mx-auto">
-					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
-						<ProfilePicture user={'user'} />
-                        <!-- <span class='w-[55ch]'>{chat.content}</span> -->
-                        {chat.content}
-					</div>
-				</li>
-			{:else if chat.role === 'assistant'}
-				<li class="p-4 bg-[#444654] mx-auto">
-					<div class=" flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
-						<ProfilePicture user={'assistant'} />
-						<div class="prose whitespace-pre-wrap text-white">
-                        <!-- <span class='w-[55ch]'>{chat.content}</span> -->
-                        {chat.content}
-						</div>
-					</div>
-				</li>
-			{/if}
-
-        {/each }
-		{#each $messages as message}
-			{#if message.role === 'user'}
-				<li class=" bg-[rgb(52,53,65)] mx-auto">
-					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
-						<ProfilePicture user={'user'} />
-						{message.content}
-					</div>
-				</li>
-			{:else if message.role === 'assistant'}
-				<li class="bg-[#444654] mx-auto">
-					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
-						<ProfilePicture user={'assistant'} />
-						<div class="prose whitespace-pre-wrap text-white">
-							{message.content}
-						</div>
-					</div>
-				</li>
-			{/if}
-		{/each}
-{/if}
+	<ul class="text-white">
+		{#if !data.auth}
+			<p>Sign In to access conversations</p>
+		{:else if data.auth && !data.authorized}
+			<p>Unauthorized to read this chat</p>
+		{:else}
+    <ChatHistory messages={$messages} /> 
+	{/if}
 		<div class="h-32 md:h-48 flex-shrink-0" />
 	</ul>
 	<div
@@ -94,20 +83,29 @@
 							Stop generating answer
 						</button>
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
-						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={reload}> Regenerate response </button>
+						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={reload}>
+							Regenerate response
+						</button>
 					{/if}
 				</div>
-                {#if !$page.data.session}
-                <button class='w-full p-3 bg-green-300/70' on:click={() => signIn()}>Logga, coglione</button>
-                {:else}
-                <AutosizingSearchBar bind:value={$input} on:submit={handleSubmit} />
-                {/if}
+				{#if !$page.data.session}
+					<button class="w-full p-3 bg-green-300/70" on:click={() => signIn()}
+						>Logga, coglione</button
+					>
+				{:else}
+					<AutosizingSearchBar
+                        isLoading={$isLoading}
+                        bind:value={$input}
+                        on:submit={handleSubmit}
+                    />
+				{/if}
 			</div>
-            <p class="self-center text-slate-200 text-xs text-center sm:text-start">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
+			<p class="self-center text-slate-200 text-xs text-center sm:text-start">
+				ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate
+				answers
+			</p>
 		</form>
 	</div>
 </div>
-
 <style>
-
 </style>

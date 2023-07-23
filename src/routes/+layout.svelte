@@ -2,12 +2,12 @@
 	import '../app.css';
 	import { page, updated } from '$app/stores';
 	import Sidebar from 'components/Sidebar.svelte';
-    let sidebarOpen = true; 
-
-    function handleSidebar() {
-        sidebarOpen = !sidebarOpen; 
-    }
-    
+	import { toasts } from '../stores/menuStore';
+	import { fly } from 'svelte/transition';
+	let sidebarOpen = false;
+	function handleSidebar() {
+		sidebarOpen = !sidebarOpen;
+	}
 </script>
 
 <!-- <MarqueeStripe />
@@ -36,13 +36,29 @@
 		</button>
 	</div>
 {/if}
+
 <div class="flex w-full h-full relative z-0 overflow-hidden text-inherit">
-    <Sidebar session={$page.data.session}/>	
+	<Sidebar session={$page.data.session} />
 	<main class="relative h-full max-w-full flex-1 overflow-hidden flex">
+		{#if $toasts}
+			{#each $toasts as toast (toast.id)}
+				<div
+					in:fly={{ y: -200, duration: 1000,  }}
+					out:fly={{ y: -200, duration: 450 }}
+					class=" text-sm absolute z-20 gap-8 right-4 left-4 md:right-1/2 md:left-auto md:translate-x-1/2 top-8 bg-red-500 flex p-3 rounded-md justify-between max-w-2xl"
+				>
+					<div>
+						<p class="font-bold">{toast.title}</p>
+						<p class="whitespace-pre-line">{toast.message}</p>
+					</div>
+                    <button class="text-white self-start" on:click={() => toasts.removeToast(toast.id)}>x</button>
+					{#if toast.icon}<div>toast.icon</div>{/if}
+				</div>
+			{/each}
+		{/if}
 		<slot />
 	</main>
 </div>
-
 
 <style>
 	/*this was on the main */

@@ -4,7 +4,7 @@
 	import type { Session } from '@auth/core/types';
 	import { onMount } from 'svelte';
 	import ChatBox from 'ui/ChatBox.svelte';
-    
+    import { previousChats } from '../stores/menuStore';
 	export let session: Session | null;
     let chatHistory: IChat[] | null = null; 
 	let sidebarOpen = true;
@@ -13,7 +13,6 @@
         id: string, 
         user_id: string, 
     }
-    
 
 	function handleSidebar() {
 		sidebarOpen = !sidebarOpen;
@@ -32,7 +31,7 @@
 
     onMount(async () => {
         const data = await getChats();
-        chatHistory = data;
+        previousChats.set(data);
     }) 
 </script>
 
@@ -117,8 +116,8 @@
         <p class='px-2 text-sm font-bold'>Previous Chats</p>
         
         <!-- chat history -->
-        {#if chatHistory}
-            {#each chatHistory as chat}
+        {#if $previousChats}
+            {#each $previousChats as chat}
                 <ChatBox id={chat.id} /> 
             {/each}
         {:else}

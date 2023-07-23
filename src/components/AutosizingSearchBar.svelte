@@ -7,7 +7,7 @@
 
 <div
 	class="flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4
-            relative border border-black/10 dark:border-gray-900/50 dark:text-white bg-[rgb(64,65,79)] rounded-xl shadow-xs dark:shadow-xs"
+            relative border border-black/10 dark:border-gray-900/50 dark:text-white bg-[rgb(64,65,79)] rounded-xl shadow-xs dark:shadow-xs group peer-disabled:cursor-not-allowed"
 >
 	<FluidTextArea
 		id="search-bar"

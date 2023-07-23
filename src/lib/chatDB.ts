@@ -7,13 +7,11 @@ export async function fetchChat(id: string, userID: string) {
         where: {
             id: id,
             user_id: userID
-
         },
         select: {
             messages: true, 
         }
     })
-
     return chat; 
 }
 
@@ -24,7 +22,6 @@ export async function deleteChat(id: string) {
             id: id,
         },
     })
-
     return chat;
 }
 
@@ -36,7 +33,7 @@ const tokenName = process.env.NODE_ENV === 'development'
 export async function getUserID(cookies) {
     const token = cookies.get(tokenName);
     if (!token) {
-        return false;
+        return undefined;
     }
     const session = await prisma.session.findUnique({ where: { sessionToken: token } })
     return session?.userId;

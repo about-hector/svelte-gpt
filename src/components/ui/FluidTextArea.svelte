@@ -53,6 +53,6 @@
 	{placeholder}
 	bind:this={textareaRef}
 	bind:value
-	class={` ${$$props.class}`}
+	class={`peer ${$$props.class}`}
 	on:keydown={(e) => submitEnterKeydown(e)}
 />
