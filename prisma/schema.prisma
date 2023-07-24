@@ -1,4 +1,3 @@
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -61,6 +60,7 @@ model VerificationToken {
 model Chat {
     id       String    @id @default(cuid())
     user_id  String
+    title    String     @default(cuid())
     messages Message[]
     user     User      @relation(fields: [user_id], references: [id], onDelete: NoAction)
 
@@ -73,7 +73,7 @@ model Message {
     role             Role
     content          String   @db.LongText
     createdAt        DateTime
-    chat             Chat?     @relation(fields: [chatId], references: [id], onDelete: SetNull)
+    chat             Chat?    @relation(fields: [chatId], references: [id], onDelete: SetNull)
     chatId           String?
 
     @@index([chatId])
@@ -82,8 +82,8 @@ model Message {
 enum Role {
     system
     user
-    assistant 
-    function 
+    assistant
+    function
 }
 
 // this is because I'm using the same database as another app of mine, so I need to keep the schema

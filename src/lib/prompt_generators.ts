@@ -1,17 +1,16 @@
 export function chatTitlePrompt(messages) {
-    return `Suggest a short title (less than 30 character) to summarize
-    the content of this chat between you and an user: 
-    
-    ${messages.map((message) => {
-        return `
-            ${message.role}:
-            "${message.content}"
+    return `Summarize the following conversation with at most 5 words.
+        The context has to be clear
 
-            \n\n
-        `
+        This is the conversation:
 
-    } )}
-
-    `
-
+        'User Question:
+        ${messages[0].content}
+        
+        AI chatbot reply:
+        ${messages[1].content}
+        '
+        
+        provide only the keywords, nothing else
+        ` 
 }

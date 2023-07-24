@@ -39,3 +39,18 @@ export async function getUserID(cookies) {
     return session?.userId;
 
 }
+
+export async function generateChatTitle(messages, chatID) {
+    const completion = await fetch('/api/completion', {
+        method: 'POST',
+        body: JSON.stringify({messages: messages, chatID: chatID})
+    })
+    
+
+
+    const title = await completion.json()
+    return {
+        id: chatID, 
+        title: title 
+    }
+}

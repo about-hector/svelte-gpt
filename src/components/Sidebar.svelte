@@ -6,7 +6,6 @@
 	import ChatBox from 'ui/ChatBox.svelte';
     import { previousChats } from '../stores/menuStore';
 	export let session: Session | null;
-    let chatHistory: IChat[] | null = null; 
 	let sidebarOpen = true;
 
     interface IChat {
@@ -118,7 +117,7 @@
         <!-- chat history -->
         {#if $previousChats}
             {#each $previousChats as chat}
-                <ChatBox id={chat.id} /> 
+                <ChatBox id={chat.id} title={chat.title}/> 
             {/each}
         {:else}
             <p>No Chats</p>

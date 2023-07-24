@@ -1,23 +1,37 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { previousChats } from '../../stores/menuStore';
 	export let id: string;
+	export let title: string = 'New Chat';
 	$: isActive = $page.url.pathname === `/chats/${id}`;
 
-    async function handleDelete(e, chatID) {
-        const response = await fetch('/chats', {
-            method: 'DELETE',
-            body: JSON.stringify(chatID)
-        })
-        
-        const data = await response.json(); 
-    }
+	async function handleDelete(e, chatID) {
+		e.preventDefault();
+		goto('/');
+		previousChats.update((array) => {
+			const newarray = array.filter((chat) => {
+				return chat.id !== chatID;
+			});
+
+			return newarray;
+		});
+		const response = await fetch('/chats', {
+			method: 'DELETE',
+			body: JSON.stringify(chatID)
+		});
+
+		const data = await response.json();
+	}
 </script>
 
 <li class="list-none rounded-md text-inherit">
 	<a
 		href={`/chats/${id}`}
 		class={`flex items-center py-3 px-3 break-all relative gap-3 
-                     ${isActive ? 'bg-[rgb(52,53,65)] pr-[3rem]' : 'hover:bg-[#2a2b32] '} cursor-pointer 
+                     ${
+												isActive ? 'bg-[rgb(52,53,65)] pr-[3rem]' : 'hover:bg-[#2a2b32] '
+											} cursor-pointer 
                     rounded-md group`}
 	>
 		<svg
@@ -35,33 +49,33 @@
 			<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
 		</svg>
 		<span class="text-ellipsis flex-1 max-h-5 overflow-hidden break-all relative">
-			{id}
+			{title}
 			<div
 				class={`absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l ${
 					isActive ? 'from-[#343541]' : 'from-[#202123] group-hover:from-[#2A2B32]'
 				} `}
 			/>
 		</span>
-        {#if isActive}
-		<div class="absolute flex right-1 z-10 text-gray-300 visible">
-			<button class="p-1 hover:text-white">
-				<svg
-					stroke="currentColor"
-					fill="none"
-					stroke-width="2"
-					viewBox="0 0 24 24"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="h-4 w-4"
-					height="1em"
-					width="1em"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path d="M12 20h9" />
-					<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-				</svg>
-			</button>
-			<!--component
+		{#if isActive}
+			<div class="absolute flex right-1 z-10 text-gray-300 visible">
+				<button class="p-1 hover:text-white">
+					<svg
+						stroke="currentColor"
+						fill="none"
+						stroke-width="2"
+						viewBox="0 0 24 24"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="h-4 w-4"
+						height="1em"
+						width="1em"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path d="M12 20h9" />
+						<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+					</svg>
+				</button>
+				<!--component
 			// when adding this back, change the pr-[3] to 4.5 in the <a> is active condition
 
 			<button
@@ -89,28 +103,28 @@
 					<line x1="12" y1="2" x2="12" y2="15" />
 				</svg>
 			</button> -->
-			<button class="p-1 hover:text-white" on:click={(e) => handleDelete(e, id)}>
-				<svg
-					stroke="currentColor"
-					fill="none"
-					stroke-width="2"
-					viewBox="0 0 24 24"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="h-4 w-4"
-					height="1em"
-					width="1em"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<polyline points="3 6 5 6 21 6" />
-					<path
-						d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-					/>
-					<line x1="10" y1="11" x2="10" y2="17" />
-					<line x1="14" y1="11" x2="14" y2="17" />
-				</svg>
-			</button>
-		</div>
-        {/if}
+				<button class="p-1 hover:text-white" on:click={(e) => handleDelete(e, id)}>
+					<svg
+						stroke="currentColor"
+						fill="none"
+						stroke-width="2"
+						viewBox="0 0 24 24"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="h-4 w-4"
+						height="1em"
+						width="1em"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<polyline points="3 6 5 6 21 6" />
+						<path
+							d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+						/>
+						<line x1="10" y1="11" x2="10" y2="17" />
+						<line x1="14" y1="11" x2="14" y2="17" />
+					</svg>
+				</button>
+			</div>
+		{/if}
 	</a>
 </li>

@@ -1,44 +1,56 @@
-<script lang='ts'>
-	
-    import { signIn, signOut } from '@auth/sveltekit/client';
+<script lang="ts">
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 	import { onMount } from 'svelte';
-    import { previousChats } from '../stores/menuStore'    
+	import { previousChats } from '../stores/menuStore';
+	import { goto } from '$app/navigation';
 
-    let chatID: string | undefined; 
+	let chatID: string | undefined;
 	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-        onFinish: async () => {
+		onFinish: async () => {
+			if ($messages.length === 2) {
+				const saveChat = await fetch('/chats', {
+					method: 'POST',
+					body: JSON.stringify($messages),
+					headers: {
+						'Content-type': 'application/json'
+					}
+				});
 
-        if ($messages.length === 2) {
-            previousChats.update((array) => [ {
-                id: 'New Chat'
-            }, ...array])
-            const saveChat = await fetch('/chats', {
-               method: 'POST', 
-               body: JSON.stringify($messages),
-               headers: {
-                'Content-type': 'application/json'
-                },
-            })
-            
-            // get the id of the chat back from the db after saving it
-            const response = await saveChat.json();
-            chatID = response.chatID;
-            //make a store so I can push the new chat to it and optimistically update the ui        
-        } else {
-            const updateChat = await fetch('/chats', {
-                method: 'PATCH',
-                body: JSON.stringify({chat: $messages.slice(-2), id: chatID ? chatID : null}),
-                headers: {
-                'Content-type': 'application/json'
-                },
-            })
-            const chat = await updateChat.json()
-        }}
+				// get the id of the chat back from the db after saving it
+				const response = await saveChat.json();
+				chatID = response.chatID;
+
+				const completion = await fetch('/api/completion', {
+					method: 'POST',
+					body: JSON.stringify({ messages: $messages, chatID: chatID })
+				});
+				const title = (await completion.json()).title;
+                goto(`/chats/${chatID}`)
+				previousChats.update((array) => {
+					return [
+						{
+							id: chatID,
+							title: title
+						},
+						...array
+					];
+				});
+			} else {
+				const updateChat = await fetch('/chats', {
+					method: 'PATCH',
+					body: JSON.stringify({ chat: $messages.slice(-2), id: chatID ? chatID : null }),
+					headers: {
+						'Content-type': 'application/json'
+					}
+				});
+				const chat = await updateChat.json();
+			}
+		}
 	});
 </script>
 
@@ -49,7 +61,7 @@
 
 <div class="w-full overflow-y-scroll">
 	<ul class="text-white">
-		{#each $previousChats as message}
+		{#each $messages as message}
 			{#if message.role === 'user'}
 				<li class=" bg-[rgb(52,53,65)] mx-auto">
 					<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
@@ -84,23 +96,37 @@
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
 					<!-- if the bot is typing, make a stop button appear. If the bot is not typing and at least one answer was given, generate another response-->
 					{#if $isLoading}
-						<button class="py-2 px-3 text-white text-xs bg-black rounded-md" on:click={() => stop()}>
+						<button
+							class="py-2 px-3 text-white text-xs bg-black rounded-md"
+							on:click={() => stop()}
+						>
 							Stop generating answer
 						</button>
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
-						<button class="py-2 px-3 text-xs text-white bg-black rounded-md" on:click={() => reload()}> Regenerate response </button>
+						<button
+							class="py-2 px-3 text-xs text-white bg-black rounded-md"
+							on:click={() => reload()}
+						>
+							Regenerate response
+						</button>
 					{/if}
 				</div>
-                {#if !$page.data.session}
-                <button class='w-full p-3 bg-green-300/70' on:click={() => signIn()}>Logga, coglione</button>
-                {:else}
-                <AutosizingSearchBar 
-                isLoading={$isLoading} 
-                bind:value={$input} 
-                on:submit={handleSubmit} />
-                {/if}
+				{#if !$page.data.session}
+					<button class="w-full p-3 bg-green-300/70" on:click={() => signIn()}
+						>Logga, coglione</button
+					>
+				{:else}
+					<AutosizingSearchBar
+						isLoading={$isLoading}
+						bind:value={$input}
+						on:submit={handleSubmit}
+					/>
+				{/if}
 			</div>
-            <p class="self-center text-slate-200 text-xs text-center sm:text-start">ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate answers</p>
+			<p class="self-center text-slate-200 text-xs text-center sm:text-start">
+				ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate
+				answers
+			</p>
 		</form>
 	</div>
 </div>
