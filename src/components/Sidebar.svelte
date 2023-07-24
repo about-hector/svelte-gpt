@@ -1,41 +1,53 @@
 <script lang="ts">
 	import { signIn, signOut } from '@auth/sveltekit/client';
-
+	import { clickOutside } from '$lib/click_outside';
 	import type { Session } from '@auth/core/types';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import ChatBox from 'ui/ChatBox.svelte';
-    import { previousChats } from '../stores/menuStore';
-	export let session: Session | null;
-	let sidebarOpen = true;
+	import { previousChats } from '../stores/menuStore';
 
-    interface IChat {
-        id: string, 
-        user_id: string, 
-    }
+	export let session: Session | null;
+	let exception;
+	let sidebarOpen = true;
+	let isMobile = false;
+	interface IChat {
+		id: string;
+		user_id: string;
+	}
 
 	function handleSidebar() {
 		sidebarOpen = !sidebarOpen;
 	}
-    
-    // when you use a button instead of an a with href
-    //function handleChatClick(chatID: string) {
-    //    goto(`/chats/${chatID}`);
-    //}
-    
-    async function getChats() {
-        const response = await fetch('/chats');
-        const data = await response.json(); 
-        return data.chats
-    }
 
-    onMount(async () => {
-        const data = await getChats();
-        previousChats.set(data);
-    }) 
+	// when you use a button instead of an a with href
+	//function handleChatClick(chatID: string) {
+	//    goto(`/chats/${chatID}`);
+	//}
+
+	function checkMobile(media) {
+		isMobile = media.matches;
+	}
+
+	async function getChats() {
+		const response = await fetch('/chats');
+		const data = await response.json();
+		return data.chats;
+	}
+
+	onMount(async () => {
+		const mediaQuery = window.matchMedia('(max-width: 767px)');
+		// Initial check to set the isMobile variable correctly
+		checkMobile(mediaQuery);
+
+		// Add an event listener to update the isMobile variable if the screen changes size
+		mediaQuery.addEventListener('change', (e) => checkMobile(e.media));
+		const data = await getChats();
+		previousChats.set(data);
+	});
 </script>
 
 {#if !sidebarOpen}
-	<div id="sidebar-toggle" class="absolute top-2 left-2 z-10">
+	<div id="sidebar-toggle" class="absolute top-2 left-2 z-10" bind:this={exception}>
 		<button
 			on:click={handleSidebar}
 			class="border border-white/20 flex-shrink-0 p-3 rounded-md transition-colors text-sm hover:bg-[hsl(240,9%,59%,.1)]"
@@ -64,10 +76,15 @@
 	<div
 		class="flex-shrink-0 overflow-x-hidden bg-[rgb(32,33,35)] h-full p-2 flex flex-col z-10 absolute md:static"
 		style={`width: ${sidebarOpen ? '260px' : '0px'}; visibility: ${sidebarOpen ? null : 'hidden'}`}
+		use:clickOutside={exception}
+		on:click_outside={isMobile ? () => handleSidebar() : () => void 0}
 	>
 		<div class="flex flex-row gap-2">
 			<div class="border w-full rounded-md border-white/20 text-sm h-11">
-				<a class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)] transition-colors flex-shrink-0 flex-grow" href={'/'}>
+				<a
+					class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)] transition-colors flex-shrink-0 flex-grow"
+					href={'/'}
+				>
 					<svg
 						stroke="currentColor"
 						fill="none"
@@ -109,27 +126,27 @@
 			</button>
 		</div>
 
-        <!-- previous chats -->
-        <div class="box-border flex-col overflow-y-auto gap-2 flex-1 -mr-2 mt-4">
-        <div class='flex flex-col gap-1 text-sm text-gray-100 pb-2 mr-2'>
-        <p class='px-2 text-sm font-bold'>Previous Chats</p>
-        
-        <!-- chat history -->
-        {#if $previousChats}
-            {#each $previousChats as chat}
-                <ChatBox id={chat.id} title={chat.title}/> 
-            {/each}
-        {:else}
-            <p>No Chats</p>
-        {/if}
+		<!-- previous chats -->
+		<div class="box-border flex-col overflow-y-auto gap-2 flex-1 -mr-2 mt-4">
+			<div class="flex flex-col gap-1 text-sm text-gray-100 pb-2 mr-2">
+				<p class="px-2 text-sm font-bold">Previous Chats</p>
 
-        </div>
-        </div>
+				<!-- chat history -->
+				{#if $previousChats}
+					{#each $previousChats as chat}
+						<ChatBox id={chat.id} title={chat.title} />
+					{/each}
+				{:else}
+					<p>No Chats</p>
+				{/if}
+			</div>
+		</div>
 
 		<div class="mt-auto">
 			{#if session}
 				<button
-					class="flex w-full gap-2 items-center justify-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signOut()}
+					class="flex w-full gap-2 items-center justify-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3"
+					on:click={() => signOut()}
 				>
 					<img src={session.user?.image} alt="user profile" class="rounded-sm w-7 h-7" />
 					{session?.user?.email}
@@ -151,7 +168,10 @@
 					</svg>
 				</button>
 			{:else}
-				<button class="flex w-full gap-2.5 items-center justify-center bg-green-400/70 transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3" on:click={() => signIn()}>Sign In</button>
+				<button
+					class="flex w-full gap-2.5 items-center justify-center bg-green-400/70 transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3"
+					on:click={() => signIn()}>Sign In</button
+				>
 			{/if}
 		</div>
 	</div>

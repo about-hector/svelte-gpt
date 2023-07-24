@@ -58,7 +58,8 @@
 		</span>
 		{#if isActive}
 			<div class="absolute flex right-1 z-10 text-gray-300 visible">
-				<button class="p-1 hover:text-white">
+				<button 
+                    class="p-1 hover:text-white">
 					<svg
 						stroke="currentColor"
 						fill="none"
