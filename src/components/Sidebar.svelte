@@ -1,11 +1,12 @@
 <script lang="ts">
+import {flip} from 'svelte/animate'
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { clickOutside } from '$lib/click_outside';
 	import type { Session } from '@auth/core/types';
 	import { onDestroy, onMount } from 'svelte';
 	import ChatBox from 'ui/ChatBox.svelte';
 	import { previousChats } from '../stores/menuStore';
-
+    
 	export let session: Session | null;
 	let exception;
 	let sidebarOpen = true;
@@ -43,6 +44,8 @@
 		mediaQuery.addEventListener('change', (e) => checkMobile(e.media));
 		const data = await getChats();
 		previousChats.set(data);
+
+        
 	});
 </script>
 
@@ -133,8 +136,10 @@
 
 				<!-- chat history -->
 				{#if $previousChats}
-					{#each $previousChats as chat}
+					{#each $previousChats as chat (chat.id)}
+                    <li class="list-none"    animate:flip={{duration: 350}}>
 						<ChatBox id={chat.id} title={chat.title} />
+                    </li>
 					{/each}
 				{:else}
 					<p>No Chats</p>

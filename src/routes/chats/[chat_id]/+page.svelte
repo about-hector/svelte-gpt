@@ -8,7 +8,8 @@
     import { toasts } from '../../../stores/menuStore';
 	import ChatHistory from 'ui/ChatHistory.svelte';
 	export let data;
-
+    import { activeChat } from '../../../stores/menuStore'
+    $: activeChat.set(data.chatID);
     $: chatID = $page.params.chat_id
 	const { input, setMessages, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
@@ -30,7 +31,6 @@
 
 
 	onMount(() => {
-        console.log(chatID)
 		if (data.authorized === false && data.redirectTo) {
 			goto(data.redirectTo);
 			toasts.addToast({
@@ -43,7 +43,6 @@
 		}
 
 	});
-
     afterNavigate(() => {
         setMessages(data.chat)
     })

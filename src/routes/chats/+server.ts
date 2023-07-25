@@ -73,6 +73,9 @@ export async function GET({ request, cookies }) {
         const chats = await prisma.chat.findMany({
             where: {
                 user_id: userID,
+            },
+            orderBy: {
+                id: "desc"
             }
         });
         return json({ chats: chats }, { status: 200 })
@@ -97,3 +100,8 @@ export async function DELETE({ request, cookies }) {
     return json({message: 'chat deleted successfully'}, {status: 200})
 
 }
+
+
+
+
+

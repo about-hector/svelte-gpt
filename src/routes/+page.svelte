@@ -6,10 +6,10 @@
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 	import { onMount } from 'svelte';
 	import { previousChats } from '../stores/menuStore';
-	import { goto } from '$app/navigation';
-
-	let chatID: string | undefined;
-	const { input, handleSubmit, messages, isLoading, reload, stop } = useChat({
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+    import { activeChat } from '../stores/menuStore'
+	let chatID: string = $activeChat;
+	const { input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
 		onFinish: async () => {
 			if ($messages.length === 2) {
@@ -23,19 +23,18 @@
 
 				// get the id of the chat back from the db after saving it
 				const response = await saveChat.json();
-				chatID = response.chatID;
-
+                activeChat.set(response.chatID)
 				const completion = await fetch('/api/completion', {
 					method: 'POST',
-					body: JSON.stringify({ messages: $messages, chatID: chatID })
+					body: JSON.stringify({ messages: $messages, chatID: $activeChat })
 				});
 				const title = (await completion.json()).title;
-                goto(`/chats/${chatID}`)
+//                goto(`/chats/${chatID}`)
 				previousChats.update((array) => {
 					return [
 						{
-							id: chatID,
-							title: title
+							id: $activeChat,
+							title: title,
 						},
 						...array
 					];
@@ -43,7 +42,7 @@
 			} else {
 				const updateChat = await fetch('/chats', {
 					method: 'PATCH',
-					body: JSON.stringify({ chat: $messages.slice(-2), id: chatID ? chatID : null }),
+					body: JSON.stringify({ chat: $messages.slice(-2), id: $activeChat ? $activeChat : null }),
 					headers: {
 						'Content-type': 'application/json'
 					}
@@ -52,6 +51,15 @@
 			}
 		}
 	});
+
+    afterNavigate((navigation) => {
+        if (navigation.to?.route.id === '/') {
+            setMessages([])
+            activeChat.set('/')
+        }
+    })
+
+    
 </script>
 
 <svelte:head>
@@ -61,6 +69,7 @@
 
 <div class="w-full overflow-y-scroll">
 	<ul class="text-white">
+        {#if $messages}
 		{#each $messages as message}
 			{#if message.role === 'user'}
 				<li class=" bg-[rgb(52,53,65)] mx-auto">
@@ -80,6 +89,7 @@
 				</li>
 			{/if}
 		{/each}
+        {/if}
 		<div class="h-32 md:h-48 flex-shrink-0" />
 	</ul>
 	<div
