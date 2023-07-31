@@ -9,7 +9,7 @@ import {flip} from 'svelte/animate'
     
 	export let session: Session | null;
 	let exception;
-	let sidebarOpen = true;
+	let sidebarOpen = false;
 	let isMobile = false;
 	interface IChat {
 		id: string;

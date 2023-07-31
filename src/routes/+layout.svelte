@@ -4,11 +4,6 @@
 	import Sidebar from 'components/Sidebar.svelte';
 	import { toasts } from '../stores/menuStore';
 	import { fly } from 'svelte/transition';
-	import { beforeNavigate } from '$app/navigation';
-	let sidebarOpen = false;
-	function handleSidebar() {
-		sidebarOpen = !sidebarOpen;
-	}
     
 </script>
 
