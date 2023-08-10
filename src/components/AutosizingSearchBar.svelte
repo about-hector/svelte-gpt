@@ -12,7 +12,7 @@
 	<FluidTextArea
 		id="search-bar"
 		rows={1}
-		placeholder="Is it possible for a cat to learn how to bark?"
+		placeholder="Send a message"
 		bind:value={value}
 		class="max-h-52 w-full resize-none bg-transparent p-0 pr-10 focus-visible:outline-none md:pr-12 pl-3 "
         on:submit
