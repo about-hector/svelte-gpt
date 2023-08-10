@@ -21,10 +21,10 @@
 <button
 	aria-haspopup="dialog"
 	aria-expanded={$rootCtx.open}
+    aria-controls={$rootCtx.contentId}
 	data-state={getDataState($rootCtx.open)}
 	{id}
-	on:click={(e) => {
-        e.preventDefault();
+	on:click|stopPropagation={() => {
 		$rootCtx.open = true;
 		$rootCtx.triggeredId = $rootCtx.open ? id : null;
         rootCtx.set($rootCtx)

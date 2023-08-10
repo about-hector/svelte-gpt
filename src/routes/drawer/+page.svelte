@@ -5,7 +5,7 @@ import { Drawer } from 'ui/ui-primitives/drawer';
 </script>
 
 <div id='wrapper' class='flex justify-center items-center mx-auto h-full'>
-<Drawer.Root shouldScaleBackground>
+<Drawer.Root shouldScaleBackground={true}>
 <Drawer.Trigger 
     class='rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
 >
@@ -17,7 +17,7 @@ import { Drawer } from 'ui/ui-primitives/drawer';
         <div class="p-4 bg-white rounded-t-[10px] flex-1">
                   <div class="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
                   <div class="max-w-md mx-auto">
-                    <Drawer.Title class="text-black font-medium mb-4">Drawer for Svelte</Drawer.Title>
+                    <Drawer.Title class="text-black font-medium mb-4">Svelte Drawer</Drawer.Title>
                     <p class="text-gray-600 mb-2">
                       This component can be used as a Dialog replacement on mobile and tablet devices.
                     </p>

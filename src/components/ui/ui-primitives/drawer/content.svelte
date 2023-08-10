@@ -8,7 +8,6 @@
 	import { getDataState } from './trigger.svelte';
 	import { getDrawerRootContext } from './root.svelte';
 
-
 	export type DrawerContentProps = BaseProps<'div'> & {
 		openAutoFocus?: boolean | HTMLElement;
 		closeAutoFocus?: boolean;
@@ -26,7 +25,7 @@
 	export let openAutoFocus: $$Props['openAutoFocus'] = true;
 	export let closeAutoFocus: $$Props['closeAutoFocus'] = true;
 	export let use: $$Props['use'] = [];
-    export let drawerRef: HTMLDivElement | null; 
+	export let drawerRef: HTMLDivElement | null;
 	const rootCtx = getDrawerRootContext();
 
 	$: if (!$rootCtx.open && $rootCtx.triggeredId && closeAutoFocus) {
@@ -35,13 +34,9 @@
 			$rootCtx.triggeredId = null;
 		});
 	}
-    onMount(() => {
-            rootCtx.update((v) => ({...v, drawerRef}))
-    }) 
-
-
-
-
+	onMount(() => {
+		rootCtx.update((v) => ({ ...v, drawerRef }));
+	});
 
 	let isDragging: boolean = false;
 	let dragStartTime: Date | null = null;
@@ -58,8 +53,7 @@
 
 	const BORDER_RADIUS = 8;
 
-
-		function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
+	function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
 		let element = el as HTMLElement;
 		const date = new Date();
 		const highlightedText = window.getSelection().toString();
@@ -216,7 +210,6 @@
 		}
 	}
 
-
 	function closeDrawer() {
 		if (!$rootCtx.dismissible) return;
 		$rootCtx.open = false;
@@ -322,7 +315,7 @@
 
 	function onAnimationStart(e: AnimationEvent) {
 		const wrapper = document.querySelector('[vaul-drawer-wrapper]');
-
+		console.log(e.animationName);
 		if (!wrapper || !$rootCtx.shouldScaleBackground) return;
 
 		if (e.animationName === 'show-dialog') {
@@ -356,39 +349,32 @@
 	}
 
 	onMount(() => {
-        $rootCtx.drawerRef = drawerRef
-        console.log($rootCtx.drawerRef)
-        initialViewportHeight = window.visualViewport?.height;
+		$rootCtx.drawerRef = drawerRef;
+		console.log($rootCtx.drawerRef);
+		initialViewportHeight = window.visualViewport?.height;
 
+		function onVisualViewportChange() {
+			if (!$rootCtx.drawerRef) return;
 
-        function onVisualViewportChange() {
-        if (!$rootCtx.drawerRef) return;
+			const visualViewportHeight = window.visualViewport?.height;
 
-        const visualViewportHeight = window.visualViewport?.height;
+			const diffFromInitial = initialViewportHeight - visualViewportHeight;
+			const drawerHeight = $rootCtx.drawerRef?.getBoundingClientRect().height || 0;
 
-        const diffFromInitial = initialViewportHeight - visualViewportHeight;
-        const drawerHeight = $rootCtx.drawerRef?.getBoundingClientRect().height || 0;
+			if (drawerHeight > visualViewportHeight) {
+				$rootCtx.drawerRef.style.height = `${visualViewportHeight - 72}px`;
+			} else {
+				$rootCtx.drawerRef.style.height = 'initial';
+			}
 
-        if (drawerHeight > visualViewportHeight) {
-        $rootCtx.drawerRef.style.height = `${visualViewportHeight - 72}px`;
-        } else {
-        $rootCtx.drawerRef.style.height = 'initial';
-        }
-
-        $rootCtx.drawerRef.style.bottom = `${diffFromInitial}px`;
-        }
+			$rootCtx.drawerRef.style.bottom = `${diffFromInitial}px`;
+		}
 		window.visualViewport?.addEventListener('resize', onVisualViewportChange);
 	});
 
 	onDestroy(() => {
-            return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
+		return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
 	});
-
-
-
-
-
-
 </script>
 
 <div
@@ -398,26 +384,37 @@
 	use:dismissable={{
 		onPointerDownOutside: (event) => {
 			dispatch('pointerDownOutside', event.detail);
+			// Exit
+			let wrapper = document.querySelector('[vaul-drawer-wrapper]');
+			if (!wrapper || !$rootCtx.shouldScaleBackground) return;
+
+			reset(wrapper, 'transform');
+			reset(wrapper, 'borderRadius');
+			set(wrapper, {
+				transitionProperty: 'transform, border-radius',
+				transitionDuration: `${TRANSITIONS.DURATION}s`,
+				transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+			});
 		},
 		onEscapeKeyDown: (event) => {
 			dispatch('escapeKeyDown', event.detail);
 		},
 		onDismiss: () => {
 			$rootCtx.open = false;
-		},
+		}
 	}}
 	use:removeScroll={{ disable: !$rootCtx.modal }}
 	id={$rootCtx.contentId}
 	aria-labelledby={$rootCtx.titleId}
 	aria-describedby={$rootCtx.descriptionId}
 	data-state={getDataState($rootCtx.open)}
-    bind:this={drawerRef}
-    on:animationstart={(e) => onAnimationStart(e)}
-    on:pointerdown={onPress}
-    on:pointermove={onMove}
-    on:pointerup={onRelease}
+	bind:this={drawerRef}
+	on:animationstart={(e) => onAnimationStart(e)}
+	on:pointerdown={(e) => onPress(e)}
+	on:pointermove={(e) => onMove(e)}
+	on:pointerup={(e) => onRelease(e)}
 	use:useActions={use ?? []}
-	vaul-drawer=""
+	vaul-drawer
 >
 	<slot />
 </div>
@@ -444,7 +441,7 @@
 		animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 	}
 
-	@keyframes show-dialog {
+	@keyframes -global-show-dialog {
 		from {
 			transform: translateY(100%);
 		}
@@ -453,7 +450,7 @@
 		}
 	}
 
-	@keyframes hide-dialog {
+	@keyframes -global-hide-dialog {
 		from {
 			transform: translateY(var(--hide-from, 0));
 		}

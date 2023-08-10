@@ -4,26 +4,24 @@
 	import { getDrawerRootContext } from './root.svelte';
 	import { onMount } from 'svelte';
 
-	export type DrawerOverlayProps = BaseProps<'div'> 
+	export type DrawerOverlayProps = BaseProps<'div'> & {
+        'vaul-overlay'?: boolean
+    } 
 </script>
 
 <script lang="ts">
 	type $$Props = DrawerOverlayProps;
-    let overlayRef ;
+    let overlayRef: HTMLDivElement | null; 
 	const rootCtx = getDrawerRootContext();
     onMount(() => {
             rootCtx.update((v) => ({...v, overlayRef})) 
 
-    console.log($rootCtx)
-    setTimeout(() => {
-        console.log('after 1ms: ', $rootCtx.open)
-    }, 1)
-        })
+    })
 </script>
 
 
 {#if $rootCtx.modal}
-	<div data-state={getDataState($rootCtx.open)} bind:this={overlayRef} {...$$restProps} vaul-overlay=''>
+	<div role='region' data-state={getDataState($rootCtx.open)} on:mouseup={(e) => $rootCtx.onRelease(e)} bind:this={overlayRef} {...$$restProps} vaul-overlay>
 		<slot />
 	</div>
 {/if}

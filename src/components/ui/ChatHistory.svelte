@@ -9,7 +9,9 @@
 					<li class=" bg-[rgb(52,53,65)] mx-auto">
 						<div class="flex flex-shrink-0 gap-4 mx-auto lg:max-w-2xl xl:max-w-3xl p-3">
 							<ProfilePicture user={'user'} />
+							<div class="prose whitespace-pre-wrap text-white">
 							{message.content}
+                            </div>
 						</div>
 					</li>
 				{:else if message.role === 'assistant'}

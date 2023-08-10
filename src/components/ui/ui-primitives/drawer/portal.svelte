@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { Portal } from '../portal';
-	import type { ComponentProps } from 'svelte';
+	import { onDestroy, type ComponentProps } from 'svelte';
 
 	type PortalProps = ComponentProps<InstanceType<typeof Portal>>;
 	export type DrawerPortalProps = {
@@ -15,6 +15,12 @@
 
 	export let container: $$Props['container'] = 'body';
 	const rootCtx = getDrawerRootContext();
+
+    onDestroy(async () => {
+        const timeOut = await setTimeout(() => {
+            return;
+        }, 5000)
+    })
 </script>
 
 {#if $rootCtx.open}

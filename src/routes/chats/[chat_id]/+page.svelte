@@ -71,7 +71,10 @@
     dark:bg-gray-800 !bg-transparent dark:bg-vert-dark-gradient pt-2 md:-left-2"
 	>
 		<form
-			on:submit={handleSubmit}
+			on:submit={(e) => {
+                            console.log($input)
+                            handleSubmit(e)
+                        }}
 			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
 			<div class="relative flex h-full flex-1 items-stretch flex-row-reverse sm:flex-col">
@@ -95,7 +98,10 @@
 					<AutosizingSearchBar
                         isLoading={$isLoading}
                         bind:value={$input}
-                        on:submit={handleSubmit}
+                        on:submit={(e) => {
+                            console.log('inside AutosizingSearchBar: ', $input)
+                            handleSubmit(e)
+                        }}
                     />
 				{/if}
 			</div>

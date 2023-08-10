@@ -8,8 +8,6 @@
 		// mycode
 		shouldScaleBackground?: boolean;
 		dismissible?: boolean;
-        drawerRef: HTMLDivElement | null;
-        overlayRef: HTMLDivElement | null;
 	};
 
 	type DrawerRootContext = {
@@ -20,6 +18,7 @@
 		readonly descriptionId: string;
 		readonly contentId: string;
 		// my code
+        onRelease: () => void;
 		drawerRef: HTMLDivElement | null;
 		overlayRef: HTMLDivElement | null;
 		shouldScaleBackground: boolean;
@@ -34,6 +33,7 @@
 		contentId: generateId(),
 		triggeredId: null,
 		//mycode
+        onRelease: () => {},
 		drawerRef: null,
 		overlayRef: null,
 		shouldScaleBackground: false,
@@ -59,6 +59,7 @@ const rootCtx = setContext({
 	});
 	// We need this as a dependency for some reason, otherwise it won't open.
 	// TODO: figure out why
+	$: rootCtx.update((v) => ({ ...v, open, modal, shouldScaleBackground, dismissible }));
 </script>
 
 <slot />
