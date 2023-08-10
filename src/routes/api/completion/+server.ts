@@ -20,8 +20,8 @@ export async function POST({ request, cookies }) {
     // Ask OpenAI for a streaming completion given the prompt
     const response = await openai.createCompletion({
         model: 'text-davinci-003',
-        temperature: 0.1,
-        max_tokens: 10,
+        temperature: 0.2,
+        max_tokens: 15,
         prompt: JSON.stringify(myPrompt),
     })
     const title = (await response.json()).choices[0].text

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-
-
+type Model = 'gpt-3.5-turbo' | 'gpt-4'
+export const gptModel = writable<Model>('gpt-3.5-turbo');
 export const isMenuOpen = writable(false);
 export const activeChat = writable('');
 

@@ -1,8 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai-edge'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { OPENAI_API_KEY } from '$env/static/private'
-import { getUserID, prisma } from '$lib/chatDB';
-import { chatTitlePrompt } from '$lib/prompt_generators';
 
 //import { env } from '$env/dynamic/private'
 // You may want to replace the above with a static private env variable
@@ -19,10 +17,10 @@ const config = new Configuration({
 const openai = new OpenAIApi(config)
 
 export async function POST({ request }) {
-    const { messages } = await request.json()
+    const { messages, model } = await request.json()
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
+        model: model,
         stream: true,
         messages: messages.map((message) => ({
             content: message.content,
@@ -33,6 +31,7 @@ export async function POST({ request }) {
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response);
+    console.log('This message used the ' + model + 'OpenAI model')
     // Respond with the stream
     return new StreamingTextResponse(stream);
 }

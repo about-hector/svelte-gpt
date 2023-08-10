@@ -7,10 +7,16 @@
 	import { onMount } from 'svelte';
 	import { previousChats } from '../stores/menuStore';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
-    import { activeChat } from '../stores/menuStore'
-	let chatID: string = $activeChat;
+    import { activeChat, gptModel } from '../stores/menuStore'
+    import ModelToggle from 'components/ModelToggle.svelte';
+	let chatID: string = $activeChat;    
+    
+
 	const { input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
+        body: {
+           model: $gptModel 
+        },
 		onFinish: async () => {
 			if ($messages.length === 2) {
 				const saveChat = await fetch('/chats', {
@@ -56,6 +62,7 @@
         if (navigation.to?.route.id === '/') {
             setMessages([])
             activeChat.set('/')
+            gptModel.set('gpt-3.5-turbo')
         }
     })
 
@@ -68,8 +75,12 @@
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
+{#if $messages.length < 1}
+    
+
+<ModelToggle /> 
+{/if}
 	<ul class="text-white">
-        {#if $messages}
 		{#each $messages as message}
 			{#if message.role === 'user'}
 				<li class=" bg-[rgb(52,53,65)] mx-auto">
@@ -91,7 +102,6 @@
 				</li>
 			{/if}
 		{/each}
-        {/if}
 		<div class="h-32 md:h-48 flex-shrink-0" />
 	</ul>
 	<div
