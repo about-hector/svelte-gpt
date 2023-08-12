@@ -3,14 +3,14 @@ import {flip} from 'svelte/animate'
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { clickOutside } from '$lib/click_outside';
 	import type { Session } from '@auth/core/types';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import ChatBox from 'ui/ChatBox.svelte';
 	import { previousChats } from '../stores/menuStore';
     
 	export let session: Session | null;
-	let exception;
-	let sidebarOpen = false;
-	let isMobile = false;
+	let exception: HTMLDivElement;
+    let sidebarOpen = true;
+    let isMobile = false;
 	interface IChat {
 		id: string;
 		user_id: string;
@@ -47,6 +47,7 @@ import {flip} from 'svelte/animate'
 
         
 	});
+
 </script>
 
 {#if !sidebarOpen}

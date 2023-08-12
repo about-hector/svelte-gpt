@@ -11,6 +11,9 @@
 <Navbar session={$page.data.session} /> -->
 <!--this checks if a new deployment was made after the user opened the Page
     allowing for him to update the contents as intended by the developer-->
+
+
+<!-- standardizzare questo processo di creazione toast -->
 {#if $updated}
 	<div class="updated-version-toast">
 		<div class="update-toast-body">
@@ -58,15 +61,6 @@
 </div>
 
 <style>
-	/*this was on the main */
-	#body-wrapper {
-		height: auto;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin-block: 2rem;
-	}
-
 	.updated-version-toast {
 		position: absolute;
 		z-index: 100;

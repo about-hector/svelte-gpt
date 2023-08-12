@@ -11,7 +11,7 @@
     }
 </script>
 
-<div class='w-7 h-7 flex-shrink-0'>
+<div class='w-7 h-7 md:w-8 md:h-8 flex-shrink-0'>
     <img
         alt={`${user}'s profile picture`}
         class="rounded-sm"
@@ -20,11 +20,6 @@
 </div>
 
 <style>
-    .image-wrapper {
-        width: 48px;
-        height: 48px;
-    }
-
     img {
         display: inline-block;
         width: 100%; 

@@ -1,6 +1,8 @@
 TO-DO: 
-- [ ] The newsletter subscribe should be light/dark themed
+
+- [ ] homepage - I have 2 handlesubmits both in the form and in the autosizing 
+searchbar component. I need to conciliate the 2
+- [ ] add a navbar that only appears on mobile (replacing the drawer toggle with a burger inside this navbar)
 
 - [ ] CSS reset from josh comeau
-- [ ] Need an idea for the website, try to make a copy of their own landing?
 - [ ] Prerender what's not interactive/dynamic, it's better for SEO and delivery speed.
