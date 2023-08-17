@@ -1,14 +1,12 @@
 <script lang='ts'>
 	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
-	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 	import { onMount } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';
-    import { toasts } from '../../../stores/menuStore';
 	import ChatHistory from 'ui/ChatHistory.svelte';
 	export let data;
-    import { activeChat } from '../../../stores/menuStore'
+    import { activeChat, toasts } from '../../../../stores/menuStore'
     $: activeChat.set(data.chatID);
     $: chatID = $page.params.chat_id
 	const { input, setMessages, handleSubmit, messages, isLoading, reload, stop } = useChat({

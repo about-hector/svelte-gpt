@@ -152,7 +152,7 @@ import {flip} from 'svelte/animate'
 			{#if session}
 				<button
 					class="flex w-full gap-2 items-center justify-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3"
-					on:click={() => signOut()}
+					on:click={() => signOut({ callbackUrl: '/login'})}
 				>
 					<img src={session.user?.image} alt="user profile" class="rounded-sm w-7 h-7" />
 					{session?.user?.email}
@@ -173,11 +173,6 @@ import {flip} from 'svelte/animate'
 						<circle cx="5" cy="12" r="1" />
 					</svg>
 				</button>
-			{:else}
-				<button
-					class="flex w-full gap-2.5 items-center justify-center bg-green-400/70 transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3"
-					on:click={() => signIn()}>Sign In</button
-				>
 			{/if}
 		</div>
 	</div>

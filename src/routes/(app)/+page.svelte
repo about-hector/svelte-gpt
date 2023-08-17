@@ -1,14 +1,9 @@
 <script lang="ts">
 import ChatHistory from 'ui/ChatHistory.svelte';
-	import { signIn, signOut } from '@auth/sveltekit/client';
-	import { page } from '$app/stores';
 	import { useChat } from 'ai/svelte';
-	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
-	import { onMount } from 'svelte';
-	import { previousChats } from '../stores/menuStore';
-	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
-    import { activeChat, gptModel } from '../stores/menuStore'
+	import { afterNavigate  } from '$app/navigation';
+    import { activeChat, gptModel, previousChats } from '../../stores/menuStore'
     import ModelToggle from 'components/ModelToggle.svelte';
     
 
@@ -115,7 +110,7 @@ import ChatHistory from 'ui/ChatHistory.svelte';
 					/>
 			</div>
 			<p class=" px-4 self-center text-slate-200 text-xs text-center sm:text-start">
-				ChatGPT clone experiment. No copyright infringement is intended. May produce inaccurate
+				ChatGPT clone experiment. No copyright infringement intended. May produce inaccurate
 				answers
 			</p>
 		</form>

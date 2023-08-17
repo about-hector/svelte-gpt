@@ -10,10 +10,10 @@ import { sequence } from "@sveltejs/kit/hooks";
 const prisma = new PrismaClient();
 
 async function authorization({ event, resolve }) {
-  if (!event.url.pathname.startsWith("/auth")) {
+  if (!event.url.pathname.startsWith("/login")) {
     const session = await event.locals.getSession();
     if (!session) {
-      throw redirect(303, "/auth/signin");
+      throw redirect(303, "/login");
     }
   }
 
@@ -29,6 +29,10 @@ export const handle: Handle = sequence(
             GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
             Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET }),
         ],
+        pages: {
+            signIn: '/login',
+            signOut: '/login'
+        }
     }),
     authorization
 );
