@@ -131,8 +131,8 @@ import {flip} from 'svelte/animate'
 		</div>
 
 		<!-- previous chats -->
-		<div class="box-border flex-col overflow-y-auto gap-2 flex-1 -mr-2 mt-4">
-			<div class="flex flex-col gap-1 text-sm text-gray-100 pb-2 mr-2">
+		<div class="scrollTrigger flex-col overflow-y-hidden hover:overflow-y-auto gap-2 flex-1 -mr-2 mt-4">
+			<div class="flex flex-col gap-1 text-sm text-gray-100 pb-2 ">
 				<p class="px-2 text-sm font-bold">Previous Chats</p>
 
 				<!-- chat history -->
@@ -184,23 +184,25 @@ import {flip} from 'svelte/animate'
 {/if}
 
 <style>
+.scrollTrigger {
+    scrollbar-gutter: stable;
+}
+
 ::-webkit-scrollbar {
+    -webkit-appearance: none;
     width: 5px;
     opacity: 0;
     transition: opacity 300ms;
 }
 
-::-webkit-scrollbar:hover {
-    opacity: 1;
-}
 
 ::-webkit-scrollbar-track {
-    background-color: rgb(64,65,79);
+    background-color: transparent;
     border-radius: 2rem;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: gray; 
+    background-color: #adadad; 
     border-radius: 2rem; 
 }
 </style>
