@@ -186,6 +186,12 @@ import {flip} from 'svelte/animate'
 <style>
 ::-webkit-scrollbar {
     width: 5px;
+    opacity: 0;
+    transition: opacity 300ms;
+}
+
+::-webkit-scrollbar:hover {
+    opacity: 1;
 }
 
 ::-webkit-scrollbar-track {
