@@ -1,6 +1,8 @@
 <script>
     import { signIn } from "@auth/sveltekit/client";
     import SvelteLogo from "./svelteLogo.svelte";
+	import LogoGoogle from "./LogoGoogle.svelte";
+	import LogoGithub from "./LogoGithub.svelte";
 </script>
 
 
@@ -12,10 +14,14 @@
 
 <div class="flex flex-col gap-2 rounded-md p-2">
 <button 
-    class='rounded-md bg-gray-200 px-3 py-2 text-black'
-    on:click={() => signIn('google', { callbackUrl: '/'})}>Continue with Google </button>
+    class='flex items-center gap-4 rounded-md bg-gray-200 px-3 py-2 text-black'
+    on:click={() => signIn('google', { callbackUrl: '/'})}>
+    <LogoGoogle />
+    Continue with Google </button>
 <button 
-    class='rounded-md bg-slate-950 px-3 py-2'
-    on:click={() => signIn('github', { callbackUrl: '/'})}>Continue with Github </button>
+    class='flex items-center gap-4 rounded-md bg-gray-200 px-3 py-2 text-black'
+    on:click={() => signIn('github', { callbackUrl: '/'})}>
+    <LogoGithub />
+    Continue with Github </button>
 
 </div>
