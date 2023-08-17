@@ -182,3 +182,19 @@ import {flip} from 'svelte/animate'
 		</div>
 	</div>
 {/if}
+
+<style>
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgb(64,65,79);
+    border-radius: 2rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: gray; 
+    border-radius: 2rem; 
+}
+</style>
