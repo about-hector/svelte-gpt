@@ -2,17 +2,22 @@ import {PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
 
-export async function fetchChat(id: string, userID: string) {
-    const chat = await prisma.chat.findUnique({
-        where: {
-            id: id,
-            user_id: userID
-        },
-        select: {
-            messages: true, 
-        }
-    })
-    return chat; 
+export async function fetchChat(id: string, userId: string) {
+    try {
+        const chat = await prisma.chat.findUnique({
+            where: {
+                id: id,
+                user_id: userId
+            },
+            select: {
+                messages: true, 
+            }
+        })
+        return chat; 
+    } catch(e) {
+        console.log('Failed retrieving chat ' + id)
+        console.log('Error: ' + e)
+    }
 }
 
 

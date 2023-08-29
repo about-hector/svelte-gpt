@@ -64,7 +64,7 @@ model Chat {
     messages Message[]
     user     User      @relation(fields: [user_id], references: [id], onDelete: NoAction)
 
-    @@index([user_id])
+    @@index([user_id, id])
 }
 
 model Message {
@@ -76,7 +76,7 @@ model Message {
     chat             Chat?    @relation(fields: [chatId], references: [id], onDelete: SetNull)
     chatId           String?
 
-    @@index([chatId])
+    @@index([chatId, id])
 }
 
 enum Role {
