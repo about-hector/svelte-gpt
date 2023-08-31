@@ -12,7 +12,7 @@
 
 	import { writable } from 'svelte/store';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
-    import {reconstructTree} from '$lib/chat_tree'
+	import { reconstructTree } from '$lib/chat_tree';
 	import MessageNode from './MessageNode.svelte';
 
 	const isLoading = writable(false);
@@ -21,13 +21,15 @@
 	async function handleSubmit(e) {
 		console.log('yay');
 	}
-    
-    let hashmap = data.chat;
-    let lastMessageId = data.currentNode;
+    async function reload(){
+        console.log('reloaded')
+    }
+	let hashmap = data.chat;
+	let lastMessageId = data.currentNode;
 
 	onMount(() => {
-        const messageTree = reconstructTree(hashmap, lastMessageId);
-        $messages = messageTree;
+		const messageTree = reconstructTree(hashmap, lastMessageId);
+		$messages = messageTree;
 	});
 </script>
 
@@ -37,44 +39,15 @@
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
+	<ul class="flex flex-col p-8 gap-2">
+		{#each $messages as node}
+			{#if node.message && node.message.author.role !== 'system'}
+				<MessageNode {node} {hashmap} />
+			{/if}
+		{/each}
 
-<ul class='flex flex-col'>
-
-{#each $messages as node}
-    {#if node.message}
-    <MessageNode message={node} />
-    {/if}
-{/each}
-
-        <div class="h-32 md:h-48 flex-shrink-0" />
-    
-    {#each $messages as node}
-        {#if !node.message || node.message.author.role === "system"}
-            <div></div>
-        {:else}
-        <li class={`${node.message.author.role === 'user' ? 'bg-red-100' : 'bg-green-100'} flex gap-8 p-6 `}>
-       {#if data.chat[node.parent].children.length > 1}
-        <div class='bg-red-200'>leone</div>
-       {/if}
-           <ProfilePicture user={node.message.author.role} />  
-            <div class={`${node.message.author.role === 'user' ? 'bg-red-100' : 'bg-green-100'} prose whitespace-pre-wrap`}>
-            {`${node.message.content.parts[0]}`}
-            </div>
-        </li>
-        {/if}
-    {/each}
-        <div class="h-32 md:h-48 flex-shrink-0" />
-
-</ul>
-
-
-
-
-
-
-
-
-
+		<div class="h-32 md:h-48 flex-shrink-0" />
+	</ul>
 
 	<!-- searchbar -->
 	<div
