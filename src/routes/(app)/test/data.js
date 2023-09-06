@@ -1,7 +1,7 @@
 export const data = {
     "title": "Node.js Event Loop & Non-blocking",
     "create_time": 1693214044.581484,
-    "update_time": 1693337300.0,
+    "update_time": 1693481425,
     "mapping": {
         "9317a53d-6e45-4862-a92c-0afcc4cfb99f": {
             "id": "9317a53d-6e45-4862-a92c-0afcc4cfb99f",
@@ -19,7 +19,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 0.0,
+                "weight": 0,
                 "metadata": {},
                 "recipient": "all"
             },
@@ -50,7 +50,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -78,7 +78,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -114,7 +114,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -142,7 +142,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -179,7 +179,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -207,7 +207,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -243,7 +243,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -271,7 +271,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -307,7 +307,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -335,7 +335,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -373,7 +373,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -401,7 +401,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -438,7 +438,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -466,7 +466,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -494,7 +494,7 @@ export const data = {
                     "role": "user",
                     "metadata": {}
                 },
-                "create_time": 1693334664.588245,
+                "create_time": 1693481409.362658,
                 "content": {
                     "content_type": "text",
                     "parts": [
@@ -502,7 +502,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -510,7 +510,8 @@ export const data = {
             },
             "parent": "a76aad7d-0a80-449b-9195-574d7a5dafc6",
             "children": [
-                "b469a37c-0a22-4f74-a3ea-0cc81281e63d"
+                "b469a37c-0a22-4f74-a3ea-0cc81281e63d",
+                "a3697b25-2537-46c8-8e61-75020017a39a"
             ]
         },
         "b469a37c-0a22-4f74-a3ea-0cc81281e63d": {
@@ -530,7 +531,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -546,7 +547,9 @@ export const data = {
                 "recipient": "all"
             },
             "parent": "aaa2f2f2-e0e2-40df-9af5-5d8eb3d03991",
-            "children": []
+            "children": [
+                "aaa27346-2209-4bfa-8286-ccb86eb47d94"
+            ]
         },
         "aaa2b266-68f8-4ce8-9786-4bb55d1e8d6c": {
             "id": "aaa2b266-68f8-4ce8-9786-4bb55d1e8d6c",
@@ -564,7 +567,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -592,7 +595,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -626,7 +629,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -654,7 +657,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -688,7 +691,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -716,7 +719,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -750,7 +753,7 @@ export const data = {
                     ]
                 },
                 "status": "finished_successfully",
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "timestamp_": "absolute"
                 },
@@ -778,7 +781,7 @@ export const data = {
                 },
                 "status": "finished_successfully",
                 "end_turn": true,
-                "weight": 1.0,
+                "weight": 1,
                 "metadata": {
                     "finish_details": {
                         "type": "stop",
@@ -795,11 +798,170 @@ export const data = {
             },
             "parent": "aaa2bce1-c7c5-4956-834f-c8cc5abc4348",
             "children": []
+        },
+        "a3697b25-2537-46c8-8e61-75020017a39a": {
+            "id": "a3697b25-2537-46c8-8e61-75020017a39a",
+            "message": {
+                "id": "a3697b25-2537-46c8-8e61-75020017a39a",
+                "author": {
+                    "role": "assistant",
+                    "metadata": {}
+                },
+                "create_time": 1693481412.078945,
+                "content": {
+                    "content_type": "text",
+                    "parts": [
+                        "I'm an AI language model created by OpenAI, so I don't have personal feelings, identities, or orientations like humans do. I'm here to help answer questions and provide information. If you have any other inquiries, feel free to ask!"
+                    ]
+                },
+                "status": "finished_successfully",
+                "end_turn": true,
+                "weight": 1,
+                "metadata": {
+                    "finish_details": {
+                        "type": "stop",
+                        "stop_tokens": [
+                            100260
+                        ]
+                    },
+                    "is_complete": true,
+                    "model_slug": "text-davinci-002-render-sha",
+                    "parent_id": "aaa2f2f2-e0e2-40df-9af5-5d8eb3d03991",
+                    "timestamp_": "absolute"
+                },
+                "recipient": "all"
+            },
+            "parent": "aaa2f2f2-e0e2-40df-9af5-5d8eb3d03991",
+            "children": [
+                "aaa2a684-5d09-4127-9237-5824691fe761"
+            ]
+        },
+        "aaa27346-2209-4bfa-8286-ccb86eb47d94": {
+            "id": "aaa27346-2209-4bfa-8286-ccb86eb47d94",
+            "message": {
+                "id": "aaa27346-2209-4bfa-8286-ccb86eb47d94",
+                "author": {
+                    "role": "user",
+                    "metadata": {}
+                },
+                "create_time": 1693481417.507161,
+                "content": {
+                    "content_type": "text",
+                    "parts": [
+                        "pipo"
+                    ]
+                },
+                "status": "finished_successfully",
+                "weight": 1,
+                "metadata": {
+                    "timestamp_": "absolute"
+                },
+                "recipient": "all"
+            },
+            "parent": "b469a37c-0a22-4f74-a3ea-0cc81281e63d",
+            "children": [
+                "b7b617d2-42a6-43e6-bb78-56db6a99ff28"
+            ]
+        },
+        "b7b617d2-42a6-43e6-bb78-56db6a99ff28": {
+            "id": "b7b617d2-42a6-43e6-bb78-56db6a99ff28",
+            "message": {
+                "id": "b7b617d2-42a6-43e6-bb78-56db6a99ff28",
+                "author": {
+                    "role": "assistant",
+                    "metadata": {}
+                },
+                "create_time": 1693481419.499211,
+                "content": {
+                    "content_type": "text",
+                    "parts": [
+                        "It seems like you've entered the word \"pipo.\" Is there something specific you'd like to know or discuss related to that term? Feel free to provide more context or ask a question!"
+                    ]
+                },
+                "status": "finished_successfully",
+                "end_turn": true,
+                "weight": 1,
+                "metadata": {
+                    "finish_details": {
+                        "type": "stop",
+                        "stop_tokens": [
+                            100260
+                        ]
+                    },
+                    "is_complete": true,
+                    "model_slug": "text-davinci-002-render-sha",
+                    "parent_id": "aaa27346-2209-4bfa-8286-ccb86eb47d94",
+                    "timestamp_": "absolute"
+                },
+                "recipient": "all"
+            },
+            "parent": "aaa27346-2209-4bfa-8286-ccb86eb47d94",
+            "children": []
+        },
+        "aaa2a684-5d09-4127-9237-5824691fe761": {
+            "id": "aaa2a684-5d09-4127-9237-5824691fe761",
+            "message": {
+                "id": "aaa2a684-5d09-4127-9237-5824691fe761",
+                "author": {
+                    "role": "user",
+                    "metadata": {}
+                },
+                "create_time": 1693481424.32085,
+                "content": {
+                    "content_type": "text",
+                    "parts": [
+                        "popi"
+                    ]
+                },
+                "status": "finished_successfully",
+                "weight": 1,
+                "metadata": {
+                    "timestamp_": "absolute"
+                },
+                "recipient": "all"
+            },
+            "parent": "a3697b25-2537-46c8-8e61-75020017a39a",
+            "children": [
+                "55c03790-6d10-4adb-9b33-fcfea0368b32"
+            ]
+        },
+        "55c03790-6d10-4adb-9b33-fcfea0368b32": {
+            "id": "55c03790-6d10-4adb-9b33-fcfea0368b32",
+            "message": {
+                "id": "55c03790-6d10-4adb-9b33-fcfea0368b32",
+                "author": {
+                    "role": "assistant",
+                    "metadata": {}
+                },
+                "create_time": 1693481425.916379,
+                "content": {
+                    "content_type": "text",
+                    "parts": [
+                        "It seems like you might have entered \"popi,\" but I'm not sure what you're referring to. Could you please provide more context or clarify your question? I'm here to help with any information or assistance you need."
+                    ]
+                },
+                "status": "finished_successfully",
+                "end_turn": true,
+                "weight": 1,
+                "metadata": {
+                    "finish_details": {
+                        "type": "stop",
+                        "stop_tokens": [
+                            100260
+                        ]
+                    },
+                    "is_complete": true,
+                    "model_slug": "text-davinci-002-render-sha",
+                    "parent_id": "aaa2a684-5d09-4127-9237-5824691fe761",
+                    "timestamp_": "absolute"
+                },
+                "recipient": "all"
+            },
+            "parent": "aaa2a684-5d09-4127-9237-5824691fe761",
+            "children": []
         }
     },
     "moderation_results": [],
-//    "current_node": "17124ddf-768f-4004-a398-2a8fb0a66518",
-        "current_node": "aaa297b0-6db4-4d65-9d6b-c855cebdf89a",
-
+    "current_node": "55c03790-6d10-4adb-9b33-fcfea0368b32",
     "conversation_id": "3f53f1a8-0809-4edf-8e61-f3bb126e197a"
 }

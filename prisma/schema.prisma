@@ -75,6 +75,9 @@ model Message {
     createdAt        DateTime
     chat             Chat?    @relation(fields: [chatId], references: [id], onDelete: SetNull)
     chatId           String?
+    parent String? 
+    parentRelation Message? @relation("ChildToParent", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    children Message[] @relation("ChildToParent")
 
     @@index([chatId, id])
 }
@@ -84,11 +87,4 @@ enum Role {
     user
     assistant
     function
-}
-
-// this is because I'm using the same database as another app of mine, so I need to keep the schema
-model GroceryItem {
-    id          Int     @id @default(autoincrement())
-    groceryItem String
-    purchased   Boolean
 }

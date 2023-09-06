@@ -1,35 +1,32 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { useChat } from 'ai/svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 	import { onMount } from 'svelte';
-	import { afterNavigate, goto } from '$app/navigation';
-	import ChatHistory from 'ui/ChatHistory.svelte';
-	export let data;
-	import { activeChat, toasts } from '../../../stores/menuStore';
-	//$: activeChat.set(data.chatID);
-	//$: chatID = $page.params.chat_id
 
 	import { writable } from 'svelte/store';
-	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import { reconstructTree } from '$lib/chat_tree';
 	import MessageNode from './MessageNode.svelte';
+	import { useChat } from 'ai/svelte';
 
+	export let data;
 	const isLoading = writable(false);
 	const input = writable('');
-	const messages = writable([]);
+
+	const {messages, setMessages} = useChat({
+        api: 'api/chat',
+    });
+
 	async function handleSubmit(e) {
 		console.log('yay');
 	}
-    async function reload(){
-        console.log('reloaded')
-    }
+	async function reload() {
+		console.log('reloaded');
+	}
 	let hashmap = data.chat;
 	let lastMessageId = data.currentNode;
 
 	onMount(() => {
-		const messageTree = reconstructTree(hashmap, lastMessageId);
-		$messages = messageTree;
+		let initialTree = reconstructTree(hashmap, lastMessageId);
+        setMessages(initialTree)
 	});
 </script>
 
@@ -39,10 +36,10 @@
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
-	<ul class="flex flex-col p-8 gap-2">
-		{#each $messages as node}
+	<ul class="flex flex-col">
+		{#each $messages as node (node.id)}
 			{#if node.message && node.message.author.role !== 'system'}
-				<MessageNode {node} {hashmap} />
+				<MessageNode {node} {hashmap} {setMessages}/>
 			{/if}
 		{/each}
 
@@ -114,7 +111,6 @@
 					isLoading={$isLoading}
 					bind:value={$input}
 					on:submit={(e) => {
-						console.log('inside AutosizingSearchBar: ', $input);
 						handleSubmit(e);
 					}}
 				/>
