@@ -2,7 +2,7 @@
 import {ContactFormSubmit} from '$lib/contact_form' 
 
 export const actions = {
-    default: async ({ request }) => {
+    default: async ({ request } : {request: Request}) => {
         const data = await request.formData();
         const sender = data.get('email-input');
         const message = data.get('message-body');

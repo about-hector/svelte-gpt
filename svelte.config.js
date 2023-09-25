@@ -20,11 +20,13 @@ const config = {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter(),
         version: {
-            pollInterval: 5000
+            // poll for the app version every n ms
+            pollInterval: 20000
         },
         alias: {
             'ui': './src/components/ui',
-            'components': './src/components'
+            'components': './src/components',
+            'stores': './src/lib/stores.ts' 
         }
 	}
 };

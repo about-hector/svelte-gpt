@@ -1,5 +1,9 @@
 TO-DO: 
 
+- [ ] chatTree
+
+
+
 - [ ] in the sidebar, the scrollbar appears on hover. on mobile it should work immediately.
 
 - [ ] homepage - I have 2 handlesubmits both in the form and in the autosizing 

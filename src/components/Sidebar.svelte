@@ -1,11 +1,11 @@
 <script lang="ts">
 import {flip} from 'svelte/animate'
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { signOut } from '@auth/sveltekit/client';
 	import { clickOutside } from '$lib/click_outside';
 	import type { Session } from '@auth/core/types';
 	import { onMount } from 'svelte';
 	import ChatBox from 'ui/ChatBox.svelte';
-	import { previousChats } from '../stores/menuStore';
+	import { previousChats } from 'stores';
     
 	export let session: Session | null;
 	let exception: HTMLDivElement;
@@ -87,7 +87,7 @@ import {flip} from 'svelte/animate'
 			<div class="border w-full rounded-md border-white/20 text-sm h-11">
 				<a
 					class="flex items-center gap-3 p-3 hover:bg-[hsl(240,9%,59%,.1)] transition-colors flex-shrink-0 flex-grow"
-					href={'/'}
+					href='/'
 				>
 					<svg
 						stroke="currentColor"

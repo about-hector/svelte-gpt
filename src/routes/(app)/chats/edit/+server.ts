@@ -4,7 +4,6 @@ import { deleteChat, getUserID, prisma } from '$lib/chatDB'
 
 export async function POST({ request }) {
     const { title, chatID, edit } = await request.json();
-    console.log(edit)
     if (edit === 'title') {
         const updateChatTitle = await prisma.chat.update({
             where: {

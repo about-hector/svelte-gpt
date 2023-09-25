@@ -1,28 +1,21 @@
 <script lang="ts">
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
 	import { onMount } from 'svelte';
-
-	import { writable } from 'svelte/store';
 	import { reconstructTree } from '$lib/chat_tree';
 	import MessageNode from './MessageNode.svelte';
 	import { useChat } from 'ai/svelte';
-
+    
+    // import the chat data from the server upon route request (page.server)
 	export let data;
-	const isLoading = writable(false);
-	const input = writable('');
+    let hashmap = data.chat;
+    let lastMessageId = data.currentNode;
 
-	const {messages, setMessages} = useChat({
+
+	const {messages, setMessages, reload, handleSubmit, isLoading, input} = useChat({
         api: 'api/chat',
+        //todo: initialMessages has to be a filtered down version of the database data
+        //initialMessages:
     });
-
-	async function handleSubmit(e) {
-		console.log('yay');
-	}
-	async function reload() {
-		console.log('reloaded');
-	}
-	let hashmap = data.chat;
-	let lastMessageId = data.currentNode;
 
 	onMount(() => {
 		let initialTree = reconstructTree(hashmap, lastMessageId);

@@ -1,8 +1,21 @@
 import { writable } from 'svelte/store';
-type Model = 'gpt-3.5-turbo' | 'gpt-4'
-export const gptModel = writable<Model>('gpt-3.5-turbo');
+import { DEFAULT_GPT_MODEL } from './costants';
+
+
+// chat-tree
+export const messageTree = writable([]); 
+
+
+export const chatId = writable<string | null>(null);
+
+
+
+//type Model = 'gpt-3.5-turbo' | 'gpt-4'
+export const gptModel = writable(DEFAULT_GPT_MODEL);
 export const isMenuOpen = writable(false);
-export const activeChat = writable('');
+
+
+export const activeChat = writable<string | null>(null);
 
 interface IChat {
     id: string, 

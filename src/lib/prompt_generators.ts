@@ -1,16 +1,24 @@
 export function chatTitlePrompt(messages) {
-    return `Summarize the following conversation with at most 5 words.
-        The context has to be clear
+    return `You are a 'title generator'.
+        Your goal is to understand the topic of a conversation and summarize it.
 
-        This is the conversation:
+        Use less than 5 words.
+        Do not use punctuation unless necessary.
 
-        'User Question:
-        ${messages[0].content}
+        A user needs your help generating a title for the following conversation:
+        \`
+        User: ${messages[0].content}
         
-        AI chatbot reply:
-        ${messages[1].content}
-        '
-        
-        provide only the keywords, nothing else
+        LLM AI Answer: ${messages[1].content}
+        \`
         ` 
 }
+
+export const systemPrompt = {
+    role: 'system',
+    content: `You are a personal assistant. 
+
+
+    `
+}
+

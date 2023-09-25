@@ -1,83 +1,89 @@
 <script lang="ts">
-import ChatHistory from 'ui/ChatHistory.svelte';
+	import ChatHistory from 'ui/ChatHistory.svelte';
 	import { useChat } from 'ai/svelte';
 	import AutosizingSearchBar from 'components/AutosizingSearchBar.svelte';
-	import { afterNavigate  } from '$app/navigation';
-    import { activeChat, gptModel, previousChats } from '../../stores/menuStore'
-    import ModelToggle from 'components/ModelToggle.svelte';
-    
+	import { goto } from '$app/navigation';
+	import { activeChat, gptModel, previousChats, messageTree, chatId } from 'stores';
+	import ModelToggle from 'components/ModelToggle.svelte';
+	import SelectedModel from 'components/SelectedModel.svelte';
+
+	$: console.log('current model: ', $gptModel);
 
 	const { input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-        body: {
-           model: $gptModel 
-        },
-		onFinish: async () => {
-			if ($messages.length === 2) {
-				const saveChat = await fetch('/chats', {
+		body: { model: $gptModel },
+		//it usually sends only role and content - if true sends also createdAt, id
+		//sendExtraMessageFields: true,
+		async onResponse() {
+			// create a chatbox as soon as the question is made
+		},
+		async onFinish() {
+			// save chat to the database -> returns chat table
+			console.log('Finished the response:');
+			console.log('saving the chat...');
+			if ($chatId === null && $messages.length === 2) {
+				console.log('the model is: ', $gptModel);
+				const chat = await fetch('chats', {
 					method: 'POST',
-					body: JSON.stringify($messages),
+					body: JSON.stringify({ messages: $messages, model: $gptModel }),
 					headers: {
 						'Content-type': 'application/json'
 					}
 				});
 
-				// get the id of the chat back from the db after saving it
-				const response = await saveChat.json();
-                activeChat.set(response.chatID)
-				const completion = await fetch('/api/completion', {
-					method: 'POST',
-					body: JSON.stringify({ messages: $messages, chatID: $activeChat })
-				});
-				const title = (await completion.json()).title;
-//                goto(`/chats/${chatID}`)
-				previousChats.update((array) => {
-					return [
-						{
-							id: $activeChat,
-							title: title,
-						},
-						...array
-					];
-				});
-			} else {
-				const updateChat = await fetch('/chats', {
-					method: 'PATCH',
-					body: JSON.stringify({ chat: $messages.slice(-2), id: $activeChat ? $activeChat : null }),
-					headers: {
-						'Content-type': 'application/json'
-					}
-				});
-				const chat = await updateChat.json();
+				//update chatID so the future requests know which convo they are from
+				const chatData = await chat.json();
+				console.log('Saved successfully.');
+				console.log(`Current active chat is: ${$activeChat}`);
+
+				activeChat.update(() => chatData.chatID);
+				console.log('Assigning activeChat: ', $activeChat);
+
+				// THIS IS AN EXPERIMENT, MIGHT NEED TO CHANGE HOW I DO IT
+				//window.history.replaceState(history.state, '', `/chats/${$activeChat}`)
+				goto(`chats/${$activeChat}`);
 			}
+
+			//const updatedChat
+
+			// 2. update hashmap and messages
+		},
+		onError(error) {
+			console.log('somehing happened', error);
 		}
 	});
 
-    afterNavigate((navigation) => {
-        if (navigation.to?.route.id === '/') {
+	// when using goto() this is not needed, the logic on chats/[chat_id] takes care of resetting stuff
+	/*******************************************************************************
+    onNavigate((navigation) => {
+        if (navigation.to && navigation.to.route.id === '/(app)') {
             setMessages([])
-            activeChat.set('/')
-            gptModel.set('gpt-3.5-turbo')
+            activeChat.update(() => '')
+            gptModel.update(() => DEFAULT_GPT_MODEL)
         }
     })
-
-    
+    *********************************************************************************/
 </script>
 
 <svelte:head>
 	<title>Svelte ChatGPT Clone</title>
-	<meta name="description" content="A high fidelity chatGPT clone realized in SvelteKit by Ettore Mihaili - Fullstack Developer" />
+	<meta
+		name="description"
+		content="A high fidelity chatGPT clone realized in SvelteKit by Ettore Mihaili - Fullstack Developer"
+	/>
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
-{#if $messages.length < 1}
-    <ModelToggle /> 
-{/if}
+	{#if $messages.length < 1}
+		<ModelToggle />
+	{:else}
+		<SelectedModel model={$gptModel} />
+	{/if}
 
-<ul class="text-white">
-    <ChatHistory messages={$messages} /> 
-    <div class="h-32 md:h-48 flex-shrink-0" />
-</ul>
+	<ul class="text-white">
+		<ChatHistory messages={$messages} />
+		<div class="h-32 md:h-48 flex-shrink-0" />
+	</ul>
 	<div
 		class="absolute bottom-0 left-0 w-full border-t-0
     dark:border-white/20 border-transparent md:dark:border-transparent
@@ -88,30 +94,58 @@ import ChatHistory from 'ui/ChatHistory.svelte';
 			on:submit={handleSubmit}
 			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
-                			<div class="relative flex h-full flex-1 items-center flex-row-reverse md:flex-col">
+			<div class="relative flex h-full flex-1 items-center flex-row-reverse md:flex-col">
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
 					<!-- if the bot is typing, make a stop button appear. If the bot is not typing and at least one answer was given, generate another response-->
 					{#if $isLoading}
-						<button class="flex items-center gap-2 py-2 px-3 text-white text-xs rounded border-0 md:border" on:click={stop}>
-                            <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+						<button
+							class="flex items-center gap-2 py-2 px-3 text-white text-xs rounded border-0 md:border"
+							on:click={stop}
+						>
+							<svg
+								stroke="currentColor"
+								fill="none"
+								stroke-width="1.5"
+								viewBox="0 0 24 24"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="h-4 w-4"
+								height="1em"
+								width="1em"
+								xmlns="http://www.w3.org/2000/svg"
+								><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg
+							>
 							<span class="hidden md:inline">Stop generating</span>
 						</button>
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 1}
-						<button class="flex items-center gap-2 py-2 px-3 text-xs text-white rounded border-0 md:border " on:click={reload}>
-                            <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 flex-shrink-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+						<button
+							class="flex items-center gap-2 py-2 px-3 text-xs text-white rounded border-0 md:border"
+							on:click={() => reload()}
+						>
+							<svg
+								stroke="currentColor"
+								fill="none"
+								stroke-width="1.5"
+								viewBox="0 0 24 24"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="h-4 w-4 flex-shrink-0"
+								height="1em"
+								width="1em"
+								xmlns="http://www.w3.org/2000/svg"
+								><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"
+								></polyline><path
+									d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+								></path></svg
+							>
 							<span class="hidden md:inline">Regenerate</span>
 						</button>
 					{/if}
 				</div>
-					<AutosizingSearchBar
-						isLoading={$isLoading}
-						bind:value={$input}
-						on:submit={handleSubmit}
-					/>
+				<AutosizingSearchBar isLoading={$isLoading} bind:value={$input} on:submit={handleSubmit} />
 			</div>
 			<p class=" px-4 self-center text-slate-200 text-xs text-center sm:text-start">
-				ChatGPT clone experiment. No copyright infringement intended. May produce inaccurate
-				answers
+				ChatGPT clone experiment. No copyright infringement intended. May produce inaccurate answers
 			</p>
 		</form>
 	</div>

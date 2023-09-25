@@ -12,6 +12,7 @@
 	let parent = node.parent;
 
 	onMount(() => {
+
 		if (hashmap[parent].children.length > 1) {
 			alternatives = [...hashmap[parent].children];
 			alternatives.map((alt, index) => {

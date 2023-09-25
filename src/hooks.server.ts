@@ -3,11 +3,9 @@ import Google from "@auth/core/providers/google";
 import GitHub from "@auth/core/providers/github";
 import { GITHUB_ID, GITHUB_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import {PrismaClient } from "@prisma/client";
 import { redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
-
-const prisma = new PrismaClient();
+import { prisma } from '$lib/prisma-client'
 
 async function authorization({ event, resolve }) {
   if (!event.url.pathname.startsWith("/login")) {
@@ -16,7 +14,6 @@ async function authorization({ event, resolve }) {
       throw redirect(303, "/login");
     }
   }
-
   // if the request is still here, just proceed as normally
   return resolve(event);
 }
