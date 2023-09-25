@@ -59,6 +59,7 @@
 			setMessages(() => []);
 			activeChat.update(() => '');
 			gptModel.update(() => DEFAULT_GPT_MODEL);
+            console.log('[chat_id] afterNavigatehook gptmodel reset:', $gptModel)
             return;
 		}
 

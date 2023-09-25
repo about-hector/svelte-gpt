@@ -65,7 +65,7 @@ export function removeScroll(_node: HTMLElement, { disable }: Args = {}) {
 		const setStyle = () =>
 			assignStyle(body, {
 				overflow: 'hidden',
-				[paddingProperty]: `${scrollbarWidth}px`,
+				[paddingProperty]: `${scrollbarWidth}px`
 			});
 
 		// Only iOS doesn't respect `overflow: hidden` on document.body
@@ -82,7 +82,7 @@ export function removeScroll(_node: HTMLElement, { disable }: Args = {}) {
 				top: `${-(scrollY - Math.floor(offsetTop))}px`,
 				left: `${-(scrollX - Math.floor(offsetLeft))}px`,
 				right: '0',
-				[paddingProperty]: `${scrollbarWidth}px`,
+				[paddingProperty]: `${scrollbarWidth}px`
 			});
 
 			return () => {
@@ -110,6 +110,6 @@ export function removeScroll(_node: HTMLElement, { disable }: Args = {}) {
 		},
 		destroy() {
 			unsub();
-		},
+		}
 	};
 }

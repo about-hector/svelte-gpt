@@ -6,12 +6,13 @@
 	import { activeChat, gptModel, previousChats, messageTree, chatId } from 'stores';
 	import ModelToggle from 'components/ModelToggle.svelte';
 	import SelectedModel from 'components/SelectedModel.svelte';
+	import { nanoid } from 'ai';
 
 	$: console.log('current model: ', $gptModel);
 
-	const { input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
+	const {append, input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-		body: { model: $gptModel },
+        //body: {model: $gptModel},
 		//it usually sends only role and content - if true sends also createdAt, id
 		//sendExtraMessageFields: true,
 		async onResponse() {
@@ -19,8 +20,6 @@
 		},
 		async onFinish() {
 			// save chat to the database -> returns chat table
-			console.log('Finished the response:');
-			console.log('saving the chat...');
 			if ($chatId === null && $messages.length === 2) {
 				console.log('the model is: ', $gptModel);
 				const chat = await fetch('chats', {
@@ -33,6 +32,7 @@
 
 				//update chatID so the future requests know which convo they are from
 				const chatData = await chat.json();
+                console.log('first chat data: ', chatData)
 				console.log('Saved successfully.');
 				console.log(`Current active chat is: ${$activeChat}`);
 
@@ -63,6 +63,15 @@
         }
     })
     *********************************************************************************/
+
+    // NICE CUSTOM HANDLER, MIGHT START USING THESE FROM NOW ON
+    //async function handleFirstMessage(e) {
+        //e.preventDefault();
+        //append({id: nanoid(), role: 'user', createdAt: new Date, content: $input}, {options: {body: { model: $gptModel}}})
+        //input.set('')
+        
+    //}
+
 </script>
 
 <svelte:head>
@@ -91,7 +100,7 @@
     dark:bg-gray-800 !bg-transparent dark:bg-vert-dark-gradient pt-2 md:-left-2"
 	>
 		<form
-			on:submit={handleSubmit}
+			on:submit={(e) => handleSubmit(e, {options: {body: {model: $gptModel}}})}
 			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
 			<div class="relative flex h-full flex-1 items-center flex-row-reverse md:flex-col">
@@ -142,7 +151,7 @@
 						</button>
 					{/if}
 				</div>
-				<AutosizingSearchBar isLoading={$isLoading} bind:value={$input} on:submit={handleSubmit} />
+				<AutosizingSearchBar isLoading={$isLoading} bind:value={$input} on:submit={(e) => handleSubmit(e, {options: {body: {model: $gptModel}}}) }/>
 			</div>
 			<p class=" px-4 self-center text-slate-200 text-xs text-center sm:text-start">
 				ChatGPT clone experiment. No copyright infringement intended. May produce inaccurate answers

@@ -1,116 +1,110 @@
 type TCharType = 'space' | 'number' | 'uppercase' | 'lowercase' | 'symbol';
 
 export function isDomElement(input: any) {
-    return !!input && input.nodeType === 1 && input instanceof Element === true;
+	return !!input && input.nodeType === 1 && input instanceof Element === true;
 }
 
 export function dataShuffle(domElement: HTMLElement, config = {}) {
+	const defaultOptions = {
+		text: '',
+		iterations: 8,
+		fps: 30,
+		onComplete: () => void 0
+	};
 
-    const defaultOptions = {
-        text: '',
-        iterations: 8,
-        fps: 30,
-        onComplete: () => void 0
-    }
+	const options = {
+		...defaultOptions,
+		...config
+	};
 
-    const options = {
-        ...defaultOptions,
-        ...config
-    }
+	//verify the dom domElement is in fact a dom domElement
+	if (!isDomElement(domElement)) {
+		throw new Error(`Can't use this function on this element, provide a valid HTML element.`);
+	} else if (!domElement.textContent) {
+		throw new Error(`The dom element has no text content`);
+	}
 
-    //verify the dom domElement is in fact a dom domElement
-    if (!isDomElement(domElement)) {
-        throw new Error(`Can't use this function on this element, provide a valid HTML element.`)
-    } else if (!domElement.textContent) {
-        throw new Error(`The dom element has no text content`)
-    }
+	// the user might want to use a specific string by passing it into the options
+	const charsArray =
+		options.text && typeof options.text === 'string'
+			? options.text.split('')
+			: domElement.textContent.split('');
 
-    // the user might want to use a specific string by passing it into the options
-    const charsArray = options.text && typeof options.text === 'string'
-        ? options.text.split('')
-        : domElement.textContent.split('');
+	const arrayCharacterTypes: TCharType[] = [];
+	const arrayCharacterPositions = [];
 
+	for (let i = 0; i < charsArray.length; ++i) {
+		const char = charsArray[i];
 
-    const arrayCharacterTypes: TCharType[] = [];
-    const arrayCharacterPositions = [];
+		if (/\s/.test(char)) {
+			arrayCharacterTypes[i] = 'space';
+			continue;
+		} else if (/[a-z]/.test(char)) {
+			arrayCharacterTypes[i] = 'lowercase';
+		} else if (/[A-Z]/.test(char)) {
+			arrayCharacterTypes[i] = 'uppercase';
+		} else {
+			arrayCharacterTypes[i] = 'symbol';
+		}
 
-    for (let i = 0; i < charsArray.length; ++i) {
+		arrayCharacterPositions.push(i);
+	}
 
-        const char = charsArray[i];
+	domElement.textContent = '';
 
-        if (/\s/.test(char)) {
-            arrayCharacterTypes[i] = 'space';
-            continue;
-        } else if (/[a-z]/.test(char)) {
-            arrayCharacterTypes[i] = 'lowercase';
-        } else if (/[A-Z]/.test(char)) {
-            arrayCharacterTypes[i] = 'uppercase';
-        } else {
-            arrayCharacterTypes[i] = 'symbol';
-        }
+	let timeoutID: NodeJS.Timeout | null = null;
+	(function shuffle(start) {
+		const charsArrayCopy = [...charsArray];
+		const charsPositionsLength = arrayCharacterPositions.length;
 
-        arrayCharacterPositions.push(i);
-    }
+		if (start > charsPositionsLength && typeof options.onComplete === 'function') {
+			console.log('Animation ended: running onComplete()', options.onComplete);
+			options.onComplete();
+			return;
+		}
 
-    domElement.textContent = '';
+		for (let i = Math.max(start, 0); i < charsPositionsLength; i += 1) {
+			if (i < start + options.iterations) {
+				charsArrayCopy[arrayCharacterPositions[i]] = randomChar(
+					arrayCharacterTypes[arrayCharacterPositions[i]]
+				);
+			} else {
+				charsArrayCopy[arrayCharacterPositions[i]] = '';
+			}
+		}
 
-    let timeoutID: NodeJS.Timeout | null = null;
-    (function shuffle(start) {
-        const charsArrayCopy = [...charsArray];
-        const charsPositionsLength = arrayCharacterPositions.length;
+		domElement.textContent = charsArrayCopy.join('');
 
-        if (start > charsPositionsLength && typeof options.onComplete === 'function') {
-            console.log('Animation ended: running onComplete()', options.onComplete)
-            options.onComplete();
-            return;
-        }
+		if (timeoutID) {
+			clearTimeout(timeoutID as NodeJS.Timeout);
+		}
 
-        for (let i = Math.max(start, 0); i < charsPositionsLength; i += 1) {
-            if (i < start + options.iterations) {
-                charsArrayCopy[arrayCharacterPositions[i]] = randomChar(arrayCharacterTypes[arrayCharacterPositions[i]]);
-            } else {
-                charsArrayCopy[arrayCharacterPositions[i]] = '';
-            }
-        }
+		timeoutID = setTimeout(() => {
+			shuffle(start + 1);
+		}, 1000 / options.fps);
+	})(-options.iterations);
 
-        domElement.textContent = charsArrayCopy.join('');
-        
-        if (timeoutID) {
-            clearTimeout(timeoutID as NodeJS.Timeout)
-        }
-
-        timeoutID = setTimeout(() => {
-            shuffle(start + 1);
-        }, 1000 / options.fps);
-    })(-options.iterations);
-
-    console.log(timeoutID)
-    return () => {
-        clearTimeout(timeoutID as NodeJS.Timeout);
-        timeoutID = null;
-        console.log('animation finished')
-    };
+	console.log(timeoutID);
+	return () => {
+		clearTimeout(timeoutID as NodeJS.Timeout);
+		timeoutID = null;
+		console.log('animation finished');
+	};
 }
 
-
-
 export function randomChar(type: TCharType): string {
-    let pool = "";
+	let pool = '';
 
+	if (type == 'lowercase') {
+		pool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	} else if (type == 'uppercase') {
+		pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	} else if (type === 'symbol') {
+		pool = ',.?/\\(^)![]{}*&^%$#\'"';
+	} else if (type === 'number') {
+		pool = ',.?/\\(^)![]{}*&^%$#\'"0123456789';
+	}
 
-    if (type == 'lowercase') {
-        pool = "abcdefghijklmnopqrstuvwxyz0123456789";
-    }
-    else if (type == 'uppercase') {
-        pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    }
-    else if (type === 'symbol') {
-        pool = ",.?/\\(^)![]{}*&^%$#'\"";
-    } else if (type === 'number') {
-        pool = ',.?/\\(^)![]{}*&^%$#\'\"0123456789'
-    }
-
-    const arrayOfCharacters = pool.split('');
-    return arrayOfCharacters[Math.floor(Math.random() * arrayOfCharacters.length)];
-
+	const arrayOfCharacters = pool.split('');
+	return arrayOfCharacters[Math.floor(Math.random() * arrayOfCharacters.length)];
 }

@@ -1,5 +1,5 @@
 export function chatTitlePrompt(messages) {
-    return `You are a 'title generator'.
+	return `You are a 'title generator'.
         Your goal is to understand the topic of a conversation and summarize it.
 
         Use less than 5 words.
@@ -11,14 +11,13 @@ export function chatTitlePrompt(messages) {
         
         LLM AI Answer: ${messages[1].content}
         \`
-        ` 
+        `;
 }
 
 export const systemPrompt = {
-    role: 'system',
-    content: `You are a personal assistant. 
+	role: 'system',
+	content: `You are a personal assistant. 
 
 
     `
-}
-
+};

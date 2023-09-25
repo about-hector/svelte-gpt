@@ -23,5 +23,5 @@ export const Drawer = {
 	Close,
 	Overlay,
 	Title,
-	Description,
+	Description
 };

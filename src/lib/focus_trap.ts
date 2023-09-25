@@ -20,7 +20,7 @@ const getParams = (params?: Params) => {
 	return {
 		disable: false,
 		autofocus: true,
-		...params,
+		...params
 	};
 };
 
@@ -86,6 +86,6 @@ export const focusTrap = ((container, params?: Params) => {
 		destroy() {
 			document.removeEventListener('focusin', handleFocusIn);
 			container.removeEventListener('keydown', handleKeyDown);
-		},
+		}
 	};
 }) satisfies Action;
