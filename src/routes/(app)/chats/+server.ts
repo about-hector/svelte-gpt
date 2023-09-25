@@ -11,13 +11,14 @@ interface IMessage {
 export async function POST({ request, cookies }) {
 	const userID = await getUserID(cookies);
 	const { messages, model } = await request.json();
+    console.dir(messages)
 	if (userID && messages) {
 		const newChat = await prisma.chat.create({
 			data: {
 				user_id: userID,
 				messages: {
 					createMany: {
-						data: messages.map((message) => {
+						data: messages.map((message, index) => {
 							return {
 								openai_unique_id: message.id,
 								role: message.role,
@@ -31,8 +32,6 @@ export async function POST({ request, cookies }) {
 				model: model
 			}
 		});
-		console.log('Saved to db. Here is the data returned:');
-		console.table(newChat);
 		return json({ chatID: newChat.id }, { status: 200 });
 	}
 }
