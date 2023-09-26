@@ -16,7 +16,7 @@
         //todo: initialMessages has to be a filtered down version of the database data
         //initialMessages:
     });
-
+    
 	onMount(() => {
 		let initialTree = reconstructTree(hashmap, lastMessageId);
         setMessages(initialTree)

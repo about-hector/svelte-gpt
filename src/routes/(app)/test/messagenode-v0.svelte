@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import { switchBranch } from '$lib/chat_tree';
-	import { currentNode, messageTree } from 'stores';
 
 	export let hashmap;
 	export let node;
@@ -11,11 +10,10 @@
 	let alternatives: string[] = [];
 	let currentAlternativeIndex: number;
 	let parent = node.parent;
-    
-    $: siblings = messageTree[parent]?.children.length 
 
 	onMount(() => {
-		if (hashmap[parent] && hashmap[parent].children && hashmap[parent].children.length > 1) {
+
+		if (hashmap[parent].children.length > 1) {
 			alternatives = [...hashmap[parent].children];
 			alternatives.map((alt, index) => {
 				if (node.id === alt) {
@@ -30,13 +28,14 @@
 		setMessages(newTree);
 	}
 </script>
+
 <li
-	class={`${node.role === 'assistant' ? 'bg-[rgb(52,53,65)]' : 'bg-[#444654]'}
+	class={`${node.message.author.role === 'assistant' ? 'bg-[rgb(52,53,65)]' : 'bg-[#444654]'}
     `}
 >
 	<div class="flex gap-4 justify-center p-4 md:py-6 md:gap-6 mx-auto flex-1 max-w-2xl">
 		<div class="flex relative items-end flex-col flex-shrink-0">
-			<ProfilePicture user={node.role} />
+			<ProfilePicture user={node.message.author.role} />
 			{#if alternatives.length > 1}
 				<div
 					class="flex items-center justify-center gap-1 absolute left-0 top-2 -ml-4 -translate-x-full visible"
@@ -90,7 +89,7 @@
 			{/if}
 		</div>
 		<div class={`prose whitespace-pre-wrap text-gray-50 w-full`}>
-			{node.content}
+			{node.message.content.parts[0]}
 		</div>
 	</div>
 </li>

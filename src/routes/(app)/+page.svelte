@@ -22,7 +22,6 @@
 		async onFinish(message) {
 			// save chat to the database -> returns chat table
 			if ($chatId === null && $messages.length === 2) {
-				console.log('the model is: ', $gptModel);
 				const chat = await fetch('chats', {
 					method: 'POST',
 					body: JSON.stringify({ messages: $messages, model: $gptModel }),
@@ -48,6 +47,7 @@
 				// THIS IS AN EXPERIMENT, MIGHT NEED TO CHANGE HOW I DO IT
 				//window.history.replaceState(history.state, '', `/chats/${$activeChat}`)
 				goto(`chats/${$activeChat}`);
+                return; 
 			}
 
 			//const updatedChat

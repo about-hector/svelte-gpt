@@ -10,7 +10,8 @@ export async function fetchChat(id: string, userId: string) {
 			},
 			select: {
 				messages: true,
-				model: true
+				model: true,
+                currentNode: true
 			}
 		});
 		return chat;

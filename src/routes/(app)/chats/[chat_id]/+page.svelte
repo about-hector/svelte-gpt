@@ -5,36 +5,69 @@
 	import { afterNavigate, onNavigate } from '$app/navigation';
 	import ChatHistory from 'ui/ChatHistory.svelte';
 	import { DEFAULT_GPT_MODEL } from '$lib/costants';
-    import { gptModel, activeChat, toasts } from 'stores';
-    import SelectedModel from 'components/SelectedModel.svelte';
+	import { gptModel, activeChat, toasts, messageTree, currentNode } from 'stores';
+	import SelectedModel from 'components/SelectedModel.svelte';
+	import { reconstructTree } from '$lib/chat_tree.js';
+	import MessageNode from '../../test/MessageNode.svelte';
+	import { writable } from 'svelte/store';
+    import {createMapping} from '$lib/chat_tree'
 
-
-    // +page.server return value
+	// +page.server return value
 	export let data;
-    
-    // conversation setup
-    $: chatID = data.chatID;
-	$: activeChat.update(() => chatID ? chatID : '');
-    $: gptModel.update(()=> data.model ? data.model : 'gpt-3.5-turbo')
+
+	// conversation setup
+	$: chatID = data.chatID;
+	$: activeChat.update(() => (chatID ? chatID : ''));
+	$: gptModel.update(() => (data.model ? data.model : 'gpt-3.5-turbo'));
+	$: messageTree.update(() => data.mapping);
+	$: initialMessages = data.lastBranch;
+
+	const regenerating = writable(false);
 	const { input, setMessages, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
-        body: { model: $gptModel},
-		initialMessages: data.chat,
-		onFinish: async () => {
+		body: { model: $gptModel },
+		initialMessages: initialMessages,
+		async onFinish() {
+			if ($regenerating) {
+				const updatedChat = await fetch('/chats', {
+					method: 'PATCH',
+					body: JSON.stringify({
+						messages: $messages.slice(-1),
+						chatId: chatID,
+						parentNode: $currentNode
+					}),
+					headers: {
+						'Content-type': 'application/json'
+					}
+				})
+
+                const updatedMessagesArray = (await updatedChat.json()).messages
+                console.log('updatedChat', updatedMessagesArray) 
+                console.log('last item in the messages store after regenerate and save: ', $messages.slice(-1))
+                const newTree = createMapping(updatedMessagesArray)
+
+				currentNode.update(() => $messages[$messages.length - 1].id);
+                messageTree.update(() => newTree);
+
+				$regenerating = false;
+				return;
+			}
+
 			const updatedChat = await fetch('/chats', {
 				method: 'PATCH',
 				body: JSON.stringify({
 					messages: $messages.slice(-2),
-					chatId: chatID
+					chatId: chatID,
+					parentNode: $currentNode
 				}),
 				headers: {
 					'Content-type': 'application/json'
 				}
 			});
 			const chat = await updatedChat.json();
+			currentNode.update(() => $messages[$messages.length - 1].id);
 		}
 	});
-
 
 	afterNavigate(() => {
 		if (data.authorized === false && data.redirectTo) {
@@ -50,22 +83,29 @@
 		//console.log('before cleaning up active chat store: ', $activeChat)
 		//activeChat.update(() => chatID)
 		//console.log('after cleaning up active chat store: ', $activeChat)
-		setMessages(data.chat);
+		currentNode.update(() => data.currentNode);
+		console.log('initializing current node with page data: ', $currentNode);
+		setMessages(initialMessages);
+	});
+
+	onMount(() => {
+		setMessages(initialMessages);
 	});
 
 	onNavigate((navigation) => {
 		if (navigation.to && navigation.to.route.id === '/(app)') {
-			console.log('user clicked newChat');
 			setMessages(() => []);
 			activeChat.update(() => '');
 			gptModel.update(() => DEFAULT_GPT_MODEL);
-            console.log('[chat_id] afterNavigatehook gptmodel reset:', $gptModel)
-            return;
+			currentNode.update(() => '');
+			return;
 		}
 
 		console.log('before cleaning up active chat store: ', $activeChat);
 		activeChat.update(() => '');
 		console.log('after cleaning up active chat store: ', $activeChat);
+		messageTree.update(() => ({}));
+		console.log('messageTree after the reset on navigation to sibling route', $messageTree);
 	});
 </script>
 
@@ -75,12 +115,14 @@
 </svelte:head>
 
 <div class="w-full overflow-y-scroll">
-    <SelectedModel model={data.model ? data.model : 'Unknown model'} />
+	<SelectedModel model={data.model ? data.model : 'Unknown model'} />
 	<ul class="text-white">
 		{#if data.auth && !data.authorized}
 			<p>Unauthorized to read this chat</p>
 		{:else}
-			<ChatHistory messages={$messages} />
+			{#each $messages as node (`${$messageTree.length}-${node.id}`)}
+				<MessageNode {node} hashmap={$messageTree} {setMessages} />
+			{/each}
 		{/if}
 		<div class="h-32 md:h-48 flex-shrink-0" />
 	</ul>
@@ -92,8 +134,9 @@
 	>
 		<form
 			on:submit={(e) => {
-				console.log($input);
-				handleSubmit(e);
+				//questo non runna, come mai? sbaglio qualcosa nel ereditare eventi con le component. fixare
+				//console.log($input);
+				//handleSubmit(e);
 			}}
 			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
@@ -123,7 +166,11 @@
 					{:else if !$isLoading && $messages.length % 2 === 0 && $messages.length > 0}
 						<button
 							class="flex items-center gap-2 py-2 px-3 text-xs text-white rounded border-0 md:border"
-							on:click={() => reload()}
+							on:click={() => {
+								$regenerating = true;
+								currentNode.update(() => $messages[$messages.length - 2].id);
+								reload();
+							}}
 						>
 							<svg
 								stroke="currentColor"
