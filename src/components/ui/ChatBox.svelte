@@ -1,34 +1,32 @@
 <script lang="ts">
-import {clickOutside} from '$lib/click_outside'
+	import { clickOutside } from '$lib/click_outside';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { previousChats } from '../../stores/menuStore';
 	export let id: string;
 	export let title: string;
-	import { activeChat } from '../../stores/menuStore';
-	import { onMount, tick } from 'svelte';
+	import { activeChat, previousChats } from 'stores';
+	import { onMount } from 'svelte';
 	import { dataShuffle } from '$lib/shuffle_characters';
 	$: isActive = $page.url.pathname === `/chats/${id}` || $activeChat === id;
 
 	let titleRef: HTMLSpanElement;
 	let inputRef;
 	let isEditing = false;
-    let originalTitle;
-    let confirmEdit;
+	let originalTitle;
+	let confirmEdit;
 
 	async function toggleIsEditing(e?: CustomEvent) {
 		isEditing = !isEditing;
 		if (isEditing) {
 			setTimeout(() => focusField(inputRef), 1);
-            originalTitle = title;
+			originalTitle = title;
 		}
 	}
 
-    async function undoEdit() {
-        title = originalTitle; 
-        toggleIsEditing()
-    }
-
+	async function undoEdit() {
+		title = originalTitle;
+		toggleIsEditing();
+	}
 
 	export function focusField(ref) {
 		ref.focus();
@@ -37,13 +35,13 @@ import {clickOutside} from '$lib/click_outside'
 	async function updateTitle() {
 		const queryParam = new URLSearchParams();
 		queryParam.append('title', 'true');
-        console.log(title)
+		console.log(title);
 		const response = await fetch('/chats/edit', {
 			method: 'POST',
 			body: JSON.stringify({ title: title, chatID: id, edit: 'title' })
 		});
 
-        isEditing = !isEditing
+		isEditing = !isEditing;
 		return;
 	}
 
@@ -76,8 +74,8 @@ import {clickOutside} from '$lib/click_outside'
 	{#if isEditing}
 		<div
 			class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:pr-14 break-all pr-14 bg-[rgb(52,53,65)]"
-                use:clickOutside={confirmEdit}
-                on:click_outside={undoEdit}
+			use:clickOutside={confirmEdit}
+			on:click_outside={undoEdit}
 		>
 			<svg
 				stroke="currentColor"
@@ -100,10 +98,9 @@ import {clickOutside} from '$lib/click_outside'
 				type="text"
 				class="text-sm outline-none border-none bg-transparent p-0 m-0 w-full mr-0"
 				bind:value={title}
-
 			/>
 			<div class="absolute flex right-1 z-10 text-gray-300 visible" bind:this={confirmEdit}>
-				<button class="p-1 hover:text-white" on:click={updateTitle} >
+				<button class="p-1 hover:text-white" on:click={updateTitle}>
 					<svg
 						stroke="currentColor"
 						fill="none"
@@ -120,8 +117,7 @@ import {clickOutside} from '$lib/click_outside'
 					</svg>
 				</button>
 
-				<button class="p-1 hover:text-white"
-                on:click={undoEdit}
+				<button class="p-1 hover:text-white" on:click={undoEdit}
 					><svg
 						stroke="currentColor"
 						fill="none"

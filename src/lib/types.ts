@@ -1,17 +1,12 @@
 import type { ActionArray } from './utils/useActions';
 import type { SvelteHTMLElements } from 'svelte/elements';
 
-
-
 // Check if type are equal or just extends
 export type IfEquals<T, U, Y = unknown, N = never> = (<G>() => G extends T ? 1 : 2) extends <
-	G,
+	G
 >() => G extends U ? 1 : 2
 	? Y
 	: N;
-
-
-
 
 export type ValueOf<T> = T[keyof T];
 
@@ -21,7 +16,6 @@ export type BaseProps<El extends keyof SvelteHTMLElements = 'div'> = SvelteHTMLE
 	['data-state']?: string;
 	[key: `data-${string}`]: string | boolean | undefined;
 };
-
 
 /**
  * UnwrapCustomEvents is a utility type that maps through each property of the given type `T`,

@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
-import { joinKeys, objectEntries } from './objects'
-import type { IfEquals } from '../types'
+import { joinKeys, objectEntries } from './objects';
+import type { IfEquals } from '../types';
 import { svelteContext } from './svelteContext';
 
 type ValueSetter<T> = (v: T) => void;
@@ -72,7 +72,7 @@ export function reactiveContext<T extends Record<string, any>>(defaults?: Defaul
 		const contextStore = {
 			...store,
 			set,
-			update,
+			update
 		};
 
 		initialContext.setContext(contextStore);

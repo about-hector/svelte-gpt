@@ -13,7 +13,7 @@ type Params = {
 	onDismiss?: () => void;
 };
 
-export const dismissable = ((node, params?: Params ) => {
+export const dismissable = ((node, params?: Params) => {
 	let onPointerDownDismiss: Params['onPointerDownOutside'];
 	let onEscapeKeyDown: Params['onEscapeKeyDown'];
 	let onDismiss: Params['onDismiss'];
@@ -22,17 +22,17 @@ export const dismissable = ((node, params?: Params ) => {
 		if (event instanceof KeyboardEvent && event.key === 'Escape') {
 			handleAndDispatchCustomEvent('escDismiss', onEscapeKeyDown, {
 				originalEvent: event,
-				preventDefault: () => event.preventDefault(),
+				preventDefault: () => event.preventDefault()
 			});
 			if (!event.defaultPrevented) {
 				onDismiss?.();
 			}
 		}
 
-		if (event instanceof MouseEvent && !node.contains(event.target as Node) ) {
+		if (event instanceof MouseEvent && !node.contains(event.target as Node)) {
 			handleAndDispatchCustomEvent('pointerDownDismiss', onPointerDownDismiss, {
 				originalEvent: event,
-				preventDefault: () => event.preventDefault(),
+				preventDefault: () => event.preventDefault()
 			});
 			if (!event.defaultPrevented) {
 				onDismiss?.();
@@ -63,7 +63,7 @@ export const dismissable = ((node, params?: Params ) => {
 		destroy() {
 			document.removeEventListener('keydown', handleDismiss);
 			document.removeEventListener('click', handleDismiss);
-		},
+		}
 	};
 }) satisfies Action;
 

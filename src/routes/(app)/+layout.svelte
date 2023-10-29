@@ -1,7 +1,7 @@
 <script>
 	import { page, updated } from '$app/stores';
 	import Sidebar from 'components/Sidebar.svelte';
-	import { toasts } from '../../stores/menuStore';
+	import { toasts } from 'stores';
 	import { fly } from 'svelte/transition';
     
 </script>

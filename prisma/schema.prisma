@@ -58,25 +58,30 @@ model VerificationToken {
 }
 
 model Chat {
-    id       String    @id @default(cuid())
+    id       String    @id @default(uuid())
     user_id  String
-    title    String     @default(cuid())
+    model String 
+    title    String    @default("New Chat")
+    currentNode String
     messages Message[]
     user     User      @relation(fields: [user_id], references: [id], onDelete: NoAction)
 
-    @@index([user_id])
+    @@index([user_id, id])
 }
 
 model Message {
-    id               String   @id @default(cuid())
+    id               String    @id @default(cuid())
     openai_unique_id String
     role             Role
-    content          String   @db.LongText
+    content          String    @db.LongText
     createdAt        DateTime
-    chat             Chat?    @relation(fields: [chatId], references: [id], onDelete: SetNull)
+    chat             Chat?     @relation(fields: [chatId], references: [id], onDelete: SetNull)
     chatId           String?
+    parent           String? 
+    parentRelation   Message?  @relation("ChildToParent", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    children         Message[] @relation("ChildToParent")
 
-    @@index([chatId])
+    @@index([chatId, id, parent])
 }
 
 enum Role {
@@ -84,11 +89,4 @@ enum Role {
     user
     assistant
     function
-}
-
-// this is because I'm using the same database as another app of mine, so I need to keep the schema
-model GroceryItem {
-    id          Int     @id @default(autoincrement())
-    groceryItem String
-    purchased   Boolean
 }

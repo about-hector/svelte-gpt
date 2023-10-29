@@ -1,15 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="color-scheme" content="dark light" />
+		<meta name="color-scheme" content="dark light" />
 		%sveltekit.head%
-        <!-- could add styles here if I wanted
+		<!-- could add styles here if I wanted
 <style> body {blablabla} </style>-->
 	</head>
-    <body id='page-body' data-sveltekit-preload-data="hover" class='bg-[rgb(52,53,65)] h-full antialiased'> 
-		<div class='flex w-full h-full relative z-0' style="display: contents" >%sveltekit.body%</div>
+	<body
+		id="page-body"
+		data-sveltekit-preload-data="hover"
+		class="bg-[rgb(52,53,65)] h-full antialiased"
+	>
+		<div class="flex w-full h-full relative z-0" style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
