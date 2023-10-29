@@ -14,58 +14,77 @@
 
 	// +page.server return value
 	export let data;
-
-	// conversation setup
-	$: chatID = data.chatID;
-	$: activeChat.update(() => (chatID ? chatID : ''));
+    const regenerating = writable(false);
+    
+    /* [REFACTORING]
+	 conversation setup, I mainly need these for when switching from 
+    //one chat to another to set the initial context for the conversation.
+    //TODO: Streamline the process with a reactive context store or with svelte5 when it comes out. */
+	$: activeChat.update(() => data.chatID);
 	$: gptModel.update(() => (data.model ? data.model : 'gpt-3.5-turbo'));
-	$: messageTree.update(() => data.mapping);
-	$: initialMessages = data.lastBranch;
+    $: currentNode.update(() => data.currentNode)
+	$: messageTree.update(() => data.chatHashmap);
+	//$: initialMessages = reconstructTree($messageTree, $currentNode);
+    let initialMessages;
+	$: initialMessages = data.lastBranch 
 
-	const regenerating = writable(false);
 	const { input, setMessages, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
 		body: { model: $gptModel },
 		initialMessages: initialMessages,
-		async onFinish() {
+        async onFinish() {
 			if ($regenerating) {
+            $messages[$messages.length -1].parent = $currentNode
+            messageTree.update((tree) => {
+                    tree[$currentNode].children = [...tree[$currentNode].children, $messages[$messages.length - 1].id]
+                    return tree;
+                    })
 				const updatedChat = await fetch('/chats', {
 					method: 'PATCH',
 					body: JSON.stringify({
 						messages: $messages.slice(-1),
-						chatId: chatID,
+						chatId: $activeChat,
 						parentNode: $currentNode
 					}),
 					headers: {
 						'Content-type': 'application/json'
 					}
 				})
-
                 const updatedMessagesArray = (await updatedChat.json()).messages
-                console.log('updatedChat', updatedMessagesArray) 
-                console.log('last item in the messages store after regenerate and save: ', $messages.slice(-1))
+                //console.log('updatedChat', updatedMessagesArray) 
+                //console.log('last item in the messages store after regenerate and save: ', $messages.slice(-1))
                 const newTree = createMapping(updatedMessagesArray)
-
+                //console.log(newTree)
 				currentNode.update(() => $messages[$messages.length - 1].id);
                 messageTree.update(() => newTree);
-
 				$regenerating = false;
 				return;
 			}
-
+         $messages[$messages.length -1].parent = $currentNode
+            messageTree.update((tree) => {
+                    tree[$currentNode].children = [...tree[$currentNode].children, $messages[$messages.length - 1].id]
+                    return tree;
+                    })
+	
 			const updatedChat = await fetch('/chats', {
 				method: 'PATCH',
 				body: JSON.stringify({
 					messages: $messages.slice(-2),
-					chatId: chatID,
+					chatId: $activeChat,
 					parentNode: $currentNode
 				}),
 				headers: {
 					'Content-type': 'application/json'
 				}
 			});
-			const chat = await updatedChat.json();
-			currentNode.update(() => $messages[$messages.length - 1].id);
+                const updatedMessagesArray = (await updatedChat.json()).messages
+                //console.log('updatedChat', updatedMessagesArray) 
+                //console.log('last item in the messages store after regenerate and save: ', $messages.slice(-1))
+                const newTree = createMapping(updatedMessagesArray)
+                //console.log(newTree)
+				currentNode.update(() => $messages[$messages.length - 1].id);
+                messageTree.update(() => newTree);
+
 		}
 	});
 
@@ -75,37 +94,33 @@
 			toasts.addToast({
 				id: crypto.randomUUID(),
 				title: 'Unauthorized user',
-				message: `No permissions to read the conversation:\n '${data.chatID}'`,
+				message: `No permissions to read the conversation:\n '${data.$activeChat}'`,
 				type: 'error'
 			});
 			return;
 		}
 		//console.log('before cleaning up active chat store: ', $activeChat)
-		//activeChat.update(() => chatID)
+		//activeChat.update(() => $activeChat)
 		//console.log('after cleaning up active chat store: ', $activeChat)
-		currentNode.update(() => data.currentNode);
-		console.log('initializing current node with page data: ', $currentNode);
+		//console.log('initializing current node with page data: ', $currentNode);
 		setMessages(initialMessages);
 	});
 
-	onMount(() => {
-		setMessages(initialMessages);
-	});
 
 	onNavigate((navigation) => {
 		if (navigation.to && navigation.to.route.id === '/(app)') {
-			setMessages(() => []);
+			setMessages(() => ([]));
 			activeChat.update(() => '');
 			gptModel.update(() => DEFAULT_GPT_MODEL);
 			currentNode.update(() => '');
 			return;
 		}
 
-		console.log('before cleaning up active chat store: ', $activeChat);
+		//console.log('before cleaning up active chat store: ', $activeChat);
 		activeChat.update(() => '');
-		console.log('after cleaning up active chat store: ', $activeChat);
+		//console.log('after cleaning up active chat store: ', $activeChat);
 		messageTree.update(() => ({}));
-		console.log('messageTree after the reset on navigation to sibling route', $messageTree);
+		//console.log('messageTree after the reset on navigation to sibling route', $messageTree);
 	});
 </script>
 
@@ -120,8 +135,8 @@
 		{#if data.auth && !data.authorized}
 			<p>Unauthorized to read this chat</p>
 		{:else}
-			{#each $messages as node (`${$messageTree.length}-${node.id}`)}
-				<MessageNode {node} hashmap={$messageTree} {setMessages} />
+			{#each $messages as node (node.id) }
+				<MessageNode {node} {setMessages} />
 			{/each}
 		{/if}
 		<div class="h-32 md:h-48 flex-shrink-0" />
@@ -170,6 +185,7 @@
 								$regenerating = true;
 								currentNode.update(() => $messages[$messages.length - 2].id);
 								reload();
+                                
 							}}
 						>
 							<svg
@@ -208,6 +224,3 @@
 		</form>
 	</div>
 </div>
-
-<style>
-</style>

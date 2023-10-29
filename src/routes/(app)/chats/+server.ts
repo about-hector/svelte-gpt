@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { deleteChat, getUserID, updateChat } from '$lib/chatDB';
-import { prisma } from '$lib/prisma-client';
+import { prisma } from '$lib/server/prisma-client';
 interface IMessage {
     id: string;
     createdAt: string;
@@ -11,7 +11,7 @@ interface IMessage {
 export async function POST({ request, cookies }) {
     const userID = await getUserID(cookies);
     const { messages, model } = await request.json();
-    console.dir(messages)
+    //console.dir(messages)
     if (userID && messages) {
         const newChat = await prisma.chat.create({
             data: {
@@ -41,8 +41,8 @@ export async function POST({ request, cookies }) {
 export async function PATCH({ request, cookies }) {
     const userId = await getUserID(cookies);
     const { messages, chatId, parentNode } = await request.json();
-    console.log('inside patch method: ')
-    console.dir(messages)
+    //console.log('inside patch method: ')
+    //console.dir(messages)
     if (userId && chatId && messages) {
         const updateChat = await prisma.chat.update({
             where: {
@@ -53,8 +53,8 @@ export async function PATCH({ request, cookies }) {
                 messages: {
                     createMany: {
                         data: messages.map((message, index) => {
-                            console.log(messages)
-                            console.log(index)
+                            //console.log(messages)
+                            //console.log(index)
                             return {
                                 id: message.id,
                                 openai_unique_id: message.id,

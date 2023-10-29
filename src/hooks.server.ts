@@ -10,7 +10,7 @@ import {
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { prisma } from '$lib/prisma-client';
+import { prisma } from '$lib/server/prisma-client';
 
 async function authorization({ event, resolve }) {
 	if (!event.url.pathname.startsWith('/login')) {

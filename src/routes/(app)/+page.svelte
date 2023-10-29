@@ -8,8 +8,6 @@
 	import SelectedModel from 'components/SelectedModel.svelte';
 	import { chatTitlePrompt } from '$lib/prompt_generators';
 
-	$: console.log('current model: ', $gptModel);
-
 	const { append, input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
 		//body: {model: $gptModel},
@@ -42,7 +40,7 @@
 				previousChats.update((current) => {
 					return [{ title: chatTitle.title, id: $activeChat }, ...current];
 				});
-				console.log('Assigning activeChat: ', $activeChat);
+				//console.log('Assigning activeChat: ', $activeChat);
 
 				// THIS IS AN EXPERIMENT, MIGHT NEED TO CHANGE HOW I DO IT
 				//window.history.replaceState(history.state, '', `/chats/${$activeChat}`)
@@ -55,7 +53,7 @@
 			// 2. update hashmap and messages
 		},
 		onError(error) {
-			console.log('somehing bad happened, damn', error);
+			console.log('OnError triggered inside useChat in index.js', error);
 		}
 	});
 

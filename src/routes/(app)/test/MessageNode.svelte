@@ -1,37 +1,52 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import { switchBranch } from '$lib/chat_tree';
 	import { currentNode, messageTree } from 'stores';
 
-	export let hashmap;
 	export let node;
 	export let setMessages;
 
-	let alternatives: string[] = [];
 	let currentAlternativeIndex: number;
-	let parent = node.parent;
+	$: parent = node.parent;
     
-    $: siblings = messageTree[parent]?.children.length 
+    let alternatives = []
+	$: alternatives =
+		$messageTree[parent] && $messageTree[parent].children ? [...$messageTree[parent].children] : [];
 
-	onMount(() => {
-		if (hashmap[parent] && hashmap[parent].children && hashmap[parent].children.length > 1) {
-			alternatives = [...hashmap[parent].children];
-			alternatives.map((alt, index) => {
-				if (node.id === alt) {
-					currentAlternativeIndex = index;
+    $: currentAlternativeIndex = alternatives.indexOf(node.id);
+
+	const unsubscribe = messageTree.subscribe((updatedTree) => {
+		console.warn(`parents children from inside ${ node.id } before messageTree update: `, alternatives)
+
+        if (!parent) {
+           console.log('I am inside the root node', node.id) 
+           return
+        }
+
+		if (parent && updatedTree[parent] && updatedTree[parent].children && Array.isArray(updatedTree[parent].children) ){
+				if (updatedTree[parent].children.length === 0) {
+					console.log('received node with no children');
 				}
-			});
+				alternatives = [...updatedTree[parent].children];
+                console.warn('after: ', alternatives)
 		}
+	});
+
+
+	onDestroy(() => {
+		unsubscribe();
 	});
 
 	async function handleAlternative(map, nodeId) {
 		let newTree = await switchBranch(map, nodeId);
 		setMessages(newTree);
+		currentNode.update(() => newTree[newTree.length - 1].id);
 	}
 </script>
+
 <li
-	class={`${node.role === 'assistant' ? 'bg-[rgb(52,53,65)]' : 'bg-[#444654]'}
+	class={`${node.role === 'assistant' ? 'bg-[#444654]' : 'bg-[rgb(52,53,65)]'}
     `}
 >
 	<div class="flex gap-4 justify-center p-4 md:py-6 md:gap-6 mx-auto flex-1 max-w-2xl">
@@ -45,7 +60,7 @@
 						class=" text-xs disabled:text-gray-300/60"
 						disabled={currentAlternativeIndex === 0}
 						on:click={() => {
-							handleAlternative(hashmap, alternatives[currentAlternativeIndex - 1]);
+							handleAlternative($messageTree, alternatives[currentAlternativeIndex - 1]);
 							currentAlternativeIndex = currentAlternativeIndex - 1;
 						}}
 					>
@@ -62,14 +77,14 @@
 							xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg
 						>
 					</button>
-					<span class="text-xs flex-grow flex-shrink-0"
-						>{currentAlternativeIndex + 1} / {alternatives.length}</span
-					>
+					<span class="text-xs flex-grow flex-shrink-0">
+                    {currentAlternativeIndex + 1} / {alternatives.length}
+                    </span>
 					<button
 						class=" text-xs disabled:text-gray-300/60"
 						disabled={(currentAlternativeIndex % alternatives.length) + 1 === alternatives.length}
 						on:click={() => {
-							handleAlternative(hashmap, alternatives[currentAlternativeIndex + 1]);
+							handleAlternative($messageTree, alternatives[currentAlternativeIndex + 1]);
 							currentAlternativeIndex = currentAlternativeIndex + 1;
 						}}
 					>

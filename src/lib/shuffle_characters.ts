@@ -58,7 +58,7 @@ export function dataShuffle(domElement: HTMLElement, config = {}) {
 		const charsPositionsLength = arrayCharacterPositions.length;
 
 		if (start > charsPositionsLength && typeof options.onComplete === 'function') {
-			console.log('Animation ended: running onComplete()', options.onComplete);
+			//console.log('Animation ended: running onComplete()', options.onComplete);
 			options.onComplete();
 			return;
 		}
@@ -84,7 +84,8 @@ export function dataShuffle(domElement: HTMLElement, config = {}) {
 		}, 1000 / options.fps);
 	})(-options.iterations);
 
-	console.log(timeoutID);
+    //why don't you run brother, is it because of the return after options.onComplete() ? yes it is you sneaky animal.
+    //TODO: delete the timeout and verify it is in fact deleted
 	return () => {
 		clearTimeout(timeoutID as NodeJS.Timeout);
 		timeoutID = null;

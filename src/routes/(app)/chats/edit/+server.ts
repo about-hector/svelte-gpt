@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { deleteChat, getUserID} from '$lib/chatDB';
-import {prisma} from '$lib/prisma-client'
+import {prisma} from '$lib/server/prisma-client'
 
 export async function POST({ request }) {
 	const { title, chatID, edit } = await request.json();

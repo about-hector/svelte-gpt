@@ -17,6 +17,7 @@ export function reconstructTree(map, lastMessageId) {
 
 export async function switchBranch(map, nodeId) {
     const treeArray = reconstructTree(map, nodeId);
+    if (map[nodeId] && map[nodeId].children) {
     let nextId = map[nodeId].children[0];
 
     while (nextId) {
@@ -30,19 +31,18 @@ export async function switchBranch(map, nodeId) {
     }
 
     return treeArray;
+    }
 }
 
 export function createMapping(messages) {
-
-    let mapping = {}
-
+    const hashTable = {}
     messages.forEach((message) => {
         const { id, parent, content, role, createdAt } = message;
 
         // Step 3: Check if the node already exists in the hashmap
-        if (!mapping[id]) {
+        if (!hashTable[id]) {
             // Step 4: If it doesn't exist, create a new entry
-            mapping[id] = {
+            hashTable[id] = {
                 id,
                 parent: parent ? parent : null,
                 children: [],
@@ -52,23 +52,21 @@ export function createMapping(messages) {
             };
         } else {
             // If it does exist, update the "parent" property
-            mapping[id].parent = parent ? parent : null;
-            mapping[id].content = content;
-            mapping[id].role = role;
-            mapping[id].createdAt = createdAt;
+            hashTable[id].parent = parent ? parent : null;
+            hashTable[id].content = content;
+            hashTable[id].role = role;
+            hashTable[id].createdAt = createdAt;
         }
-
         // Update the "children" property of the parent node
-        if (parent && !mapping[parent]) {
-            mapping[parent] = {
+        if (parent && !hashTable[parent]) {
+            hashTable[parent] = {
                 id: parent,
                 parent: null,
                 children: [id]
             };
         } else if (parent) {
-            mapping[parent].children.push(id);
+            hashTable[parent].children.push(id);
         }
     });
-    
-    return mapping; 
+    return hashTable; 
 }

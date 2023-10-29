@@ -67,7 +67,7 @@ export async function POST({ request }: { request: Request }) {
                 //const chat = await updateChat(answer, userID, chatId)
             }
         });
-        console.log('This message used the ' + model + 'OpenAI model');
+        //console.log('This message used the ' + model + 'OpenAI model');
 
         //TODO: process the stream on my own
         //for await (const part of response) {

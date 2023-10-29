@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { prisma } from './prisma-client';
+import { prisma } from '$lib/server/prisma-client';
 
 export async function fetchChat(id: string, userId: string) {
 	try {

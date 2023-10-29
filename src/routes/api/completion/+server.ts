@@ -3,7 +3,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { chatTitlePrompt } from '$lib/prompt_generators';
 import { getUserID } from '$lib/chatDB';
-import { prisma } from '$lib/prisma-client';
+import { prisma } from '$lib/server/prisma-client';
 import { json } from '@sveltejs/kit';
 
 const openai = new OpenAI({
