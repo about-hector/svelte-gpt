@@ -148,11 +148,7 @@
     dark:bg-gray-800 !bg-transparent dark:bg-vert-dark-gradient pt-2 md:-left-2"
 	>
 		<form
-			on:submit={(e) => {
-				//questo non runna, come mai? sbaglio qualcosa nel ereditare eventi con le component. fixare
-				//console.log($input);
-				//handleSubmit(e);
-			}}
+			on:submit={(e) => handleSubmit(e, { options: { body: { model: $gptModel } } })}
 			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
 			<div class="relative flex h-full flex-1 items-center flex-row-reverse sm:flex-col">
@@ -208,13 +204,10 @@
 						</button>
 					{/if}
 				</div>
-				<AutosizingSearchBar
+			<AutosizingSearchBar
 					isLoading={$isLoading}
 					bind:value={$input}
-					on:submit={(e) => {
-						console.log('inside AutosizingSearchBar: ', $input);
-						handleSubmit(e);
-					}}
+					on:submit={(e) => handleSubmit(e, { options: { body: { model: $gptModel } } })}
 				/>
 			</div>
 			<p class="px-4 self-center text-slate-200 text-xs text-center">
