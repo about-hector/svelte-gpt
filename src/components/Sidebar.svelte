@@ -6,6 +6,7 @@ import {flip} from 'svelte/animate'
 	import { onMount } from 'svelte';
 	import ChatBox from 'ui/ChatBox.svelte';
 	import { previousChats } from 'stores';
+	import Separator from 'ui/ui-primitives/separator/Separator.svelte';
     
 	export let session: Session | null;
 	let exception: HTMLDivElement;
@@ -149,6 +150,7 @@ import {flip} from 'svelte/animate'
 		</div>
 
 		<div class="mt-auto">
+        <Separator decorative={false} class='my-1' />
 			{#if session}
 				<button
 					class="flex w-full gap-2 items-center justify-center transition-colors text-sm rounded-md hover:dark:bg-[rgb(52,53,65)] p-3"
