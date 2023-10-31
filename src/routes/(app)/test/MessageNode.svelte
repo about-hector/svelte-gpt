@@ -28,7 +28,7 @@
 				if (updatedTree[parent].children.length === 0) {
 					console.log('received node with no children');
 				}
-				alternatives = [...updatedTree[parent].children];
+				//alternatives = [...updatedTree[parent].children];
                 console.warn('after: ', alternatives)
 		}
 	});
