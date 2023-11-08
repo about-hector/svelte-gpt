@@ -88,7 +88,7 @@ export async function GET({ request, cookies }) {
                 user_id: userID
             },
             orderBy: {
-                id: 'desc'
+                createdAt: 'desc'
             }
         });
         return json({ chats: chats }, { status: 200 });
