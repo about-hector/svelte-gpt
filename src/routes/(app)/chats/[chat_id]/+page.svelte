@@ -148,7 +148,6 @@
 
 <div class="w-full overflow-y-scroll">
 	<SelectedModel model={data.model ? data.model : 'Unknown model'} />
-    {$currentNode}
 	<ul class="text-white">
 		{#if data.auth && !data.authorized}
 			<p>Unauthorized to read this chat</p>
