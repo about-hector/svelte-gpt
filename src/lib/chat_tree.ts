@@ -56,7 +56,7 @@ export function createMapping(messages) {
             hashTable[id].parent = parent ? parent : null;
             hashTable[id].content = content;
             hashTable[id].role = role;
-            hashTable[id].createdAt = createdAt;
+            hashTable[id].createdAt = createdAtDate;
         }
         // Update the "children" property of the parent node
         if (parent && !hashTable[parent]) {

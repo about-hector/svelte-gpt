@@ -34,7 +34,7 @@
 					body: JSON.stringify({ messages: $messages, chatID: chat.chatID })
 				}).then((response) => response.json());
 
-				await Promise.all([chat, chatTitle]);
+				//await Promise.all([chat, chatTitle]);
 
 				activeChat.update(() => chat.chatID);
 				previousChats.update((current) => {

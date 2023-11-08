@@ -24,7 +24,6 @@ export async function POST({ request, cookies }) {
 		prompt: JSON.stringify(myPrompt)
 	});
 
-    console.log(response.choices[0].text)
 	//const title = (await response.json()).choices[0].text;
     const title = response.choices[0].text;
 	const updateChat = await prisma.chat.update({
