@@ -65,6 +65,7 @@ model Chat {
     currentNode String
     messages Message[]
     user     User      @relation(fields: [user_id], references: [id], onDelete: NoAction)
+    createdAt DateTime @default(now())
 
     @@index([user_id, id])
 }

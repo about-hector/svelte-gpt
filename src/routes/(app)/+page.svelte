@@ -7,6 +7,7 @@
 	import ModelToggle from 'components/ModelToggle.svelte';
 	import SelectedModel from 'components/SelectedModel.svelte';
 	import { chatTitlePrompt } from '$lib/prompt_generators';
+	import MessageNode from './test/MessageNode.svelte';
 
 	const { append, input, handleSubmit, messages, setMessages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
@@ -15,7 +16,6 @@
 		//sendExtraMessageFields: true,
 		async onResponse() {
 			// create a chatbox as soon as the question is made
-
 		},
 		async onFinish(message) {
 			// save chat to the database -> returns chat table
@@ -45,7 +45,7 @@
 				// THIS IS AN EXPERIMENT, MIGHT NEED TO CHANGE HOW I DO IT
 				//window.history.replaceState(history.state, '', `/chats/${$activeChat}`)
 				goto(`chats/${$activeChat}`);
-                return; 
+				return;
 			}
 
 			//const updatedChat
@@ -93,7 +93,10 @@
 	{/if}
 
 	<ul class="text-white">
-		<ChatHistory messages={$messages} />
+		{#each $messages as node (node.id)}
+			<MessageNode {node} {setMessages} />
+		{/each}
+
 		<div class="h-32 md:h-48 flex-shrink-0" />
 	</ul>
 	<div
