@@ -16,6 +16,7 @@ export function reconstructTree(map, lastMessageId) {
 }
 
 export async function switchBranch(map, nodeId) {
+    // given a nodeId, reconstructs all the messages above it in the correct order
     const treeArray = reconstructTree(map, nodeId);
     if (map[nodeId] && map[nodeId].children) {
         let nextId = map[nodeId].children[0];

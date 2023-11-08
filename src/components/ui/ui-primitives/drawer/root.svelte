@@ -60,6 +60,10 @@ const rootCtx = setContext({
 	// We need this as a dependency for some reason, otherwise it won't open.
 	// TODO: figure out why
 	$: rootCtx.update((v) => ({ ...v, open, modal, shouldScaleBackground, dismissible }));
+
+    //my attempt, but it seems we don't need to be subscribed to this
+	//$: rootCtx.subscribe(() => {})
 </script>
 
 <slot />
+

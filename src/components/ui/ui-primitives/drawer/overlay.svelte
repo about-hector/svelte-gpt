@@ -19,9 +19,16 @@
     })
 </script>
 
-
+<!--use on:pointerup maybe?  --> 
 {#if $rootCtx.modal}
-	<div role='region' data-state={getDataState($rootCtx.open)} on:mouseup={(e) => $rootCtx.onRelease(e)} bind:this={overlayRef} {...$$restProps} vaul-overlay>
+	<div 
+        role='region' 
+        data-state={getDataState($rootCtx.open)} 
+        on:mouseup={(e) => $rootCtx.onRelease(e)} 
+        bind:this={overlayRef} 
+        {...$$restProps} 
+        vaul-overlay
+    >
 		<slot />
 	</div>
 {/if}

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte';
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import { switchBranch } from '$lib/chat_tree';
 	import { currentNode, messageTree } from 'stores';
@@ -7,36 +6,13 @@
 	export let node;
 	export let setMessages;
 
-	let currentAlternativeIndex: number;
 	$: parent = node.parent;
     
-    let alternatives = []
 	$: alternatives =
 		$messageTree[parent] && $messageTree[parent].children ? [...$messageTree[parent].children] : [];
-
-    $: currentAlternativeIndex = alternatives.indexOf(node.id);
-
-	const unsubscribe = messageTree.subscribe((updatedTree) => {
-		console.warn(`parents children from inside ${ node.id } before messageTree update: `, alternatives)
-
-        if (!parent) {
-           console.log('I am inside the root node', node.id) 
-           return
-        }
-
-		if (parent && updatedTree[parent] && updatedTree[parent].children && Array.isArray(updatedTree[parent].children) ){
-				if (updatedTree[parent].children.length === 0) {
-					console.log('received node with no children');
-				}
-				//alternatives = [...updatedTree[parent].children];
-                console.warn('after: ', alternatives)
-		}
-	});
+    $: currentAlternativeIndex = alternatives.length > 1 ? alternatives.indexOf(node.id) : 0;
 
 
-	onDestroy(() => {
-		unsubscribe();
-	});
 
 	async function handleAlternative(map, nodeId) {
 		let newTree = await switchBranch(map, nodeId);
@@ -44,7 +20,6 @@
 		currentNode.update(() => newTree[newTree.length - 1].id);
 	}
 </script>
-
 <li
 	class={`${node.role === 'assistant' ? 'bg-[#444654]' : 'bg-[rgb(52,53,65)]'}
     `}

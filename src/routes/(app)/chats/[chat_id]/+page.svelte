@@ -10,35 +10,36 @@
 	import { reconstructTree } from '$lib/chat_tree.js';
 	import MessageNode from '../../test/MessageNode.svelte';
 	import { writable } from 'svelte/store';
-    import {createMapping} from '$lib/chat_tree'
+	import { createMapping } from '$lib/chat_tree';
 
 	// +page.server return value
 	export let data;
-    const regenerating = writable(false);
-    
-    /* [REFACTORING]
+	const regenerating = writable(false);
+
+	/* [REFACTORING]
 	 conversation setup, I mainly need these for when switching from 
     //one chat to another to set the initial context for the conversation.
     //TODO: Streamline the process with a reactive context store or with svelte5 when it comes out. */
 	$: activeChat.update(() => data.chatID);
 	$: gptModel.update(() => (data.model ? data.model : 'gpt-3.5-turbo'));
-    $: currentNode.update(() => data.currentNode)
+	$: currentNode.update(() => data.currentNode);
 	$: messageTree.update(() => data.chatHashmap);
-	//$: initialMessages = reconstructTree($messageTree, $currentNode);
-    let initialMessages;
-	$: initialMessages = data.lastBranch 
+	$: initialMessages = data.lastBranch;
 
 	const { input, setMessages, handleSubmit, messages, isLoading, reload, stop } = useChat({
 		api: '/api/ai-chat',
+        initialMessages: initialMessages,
 		body: { model: $gptModel },
-		initialMessages: initialMessages,
-        async onFinish() {
+		async onFinish(response) {
 			if ($regenerating) {
-            $messages[$messages.length -1].parent = $currentNode
-            messageTree.update((tree) => {
-                    tree[$currentNode].children = [...tree[$currentNode].children, $messages[$messages.length - 1].id]
-                    return tree;
-                    })
+				$messages[$messages.length - 1].parent = $currentNode;
+				messageTree.update((tree) => {
+					tree[$currentNode].children = [
+						...tree[$currentNode].children,
+						$messages[$messages.length - 1].id
+					];
+					return tree;
+				});
 				const updatedChat = await fetch('/chats', {
 					method: 'PATCH',
 					body: JSON.stringify({
@@ -49,23 +50,30 @@
 					headers: {
 						'Content-type': 'application/json'
 					}
-				})
-                const updatedMessagesArray = (await updatedChat.json()).messages
-                //console.log('updatedChat', updatedMessagesArray) 
-                //console.log('last item in the messages store after regenerate and save: ', $messages.slice(-1))
-                const newTree = createMapping(updatedMessagesArray)
-                //console.log(newTree)
-				currentNode.update(() => $messages[$messages.length - 1].id);
+				});
+				const updatedMessagesArray = (await updatedChat.json()).messages;
+				const newTree = createMapping(updatedMessagesArray);
+                currentNode.update(() => $messages[$messages.length - 1].id);
                 messageTree.update(() => newTree);
 				$regenerating = false;
 				return;
 			}
-         $messages[$messages.length -1].parent = $currentNode
-            messageTree.update((tree) => {
-                    tree[$currentNode].children = [...tree[$currentNode].children, $messages[$messages.length - 1].id]
-                    return tree;
-                    })
-	
+            let question = $messages[$messages.length -2]
+			$messages[$messages.length - 1].parent = question.id;
+            console.log({$messageTree})
+			messageTree.update((tree) => {
+                console.log(question.id, $currentNode)
+                tree[question.id] = {
+                    id: question.id,
+                    children: [response.id],
+                    parent: $currentNode,
+                    role: question.role,
+                    content: question.content
+                }
+				return tree;
+			});
+            console.log(`message tree after updating the question.id`, $messageTree)
+
 			const updatedChat = await fetch('/chats', {
 				method: 'PATCH',
 				body: JSON.stringify({
@@ -77,14 +85,10 @@
 					'Content-type': 'application/json'
 				}
 			});
-                const updatedMessagesArray = (await updatedChat.json()).messages
-                //console.log('updatedChat', updatedMessagesArray) 
-                //console.log('last item in the messages store after regenerate and save: ', $messages.slice(-1))
-                const newTree = createMapping(updatedMessagesArray)
-                //console.log(newTree)
-				currentNode.update(() => $messages[$messages.length - 1].id);
-                messageTree.update(() => newTree);
-
+			const updatedMessagesArray = (await updatedChat.json()).messages;
+			const newTree = createMapping(updatedMessagesArray);
+			currentNode.update(() => $messages[$messages.length - 1].id);
+			messageTree.update(() => newTree);
 		}
 	});
 
@@ -105,7 +109,6 @@
 		//console.log('initializing current node with page data: ', $currentNode);
 		setMessages(initialMessages);
 	});
-
 
 	onNavigate((navigation) => {
 		if (navigation.to && navigation.to.route.id === '/(app)') {
@@ -135,7 +138,7 @@
 		{#if data.auth && !data.authorized}
 			<p>Unauthorized to read this chat</p>
 		{:else}
-			{#each $messages as node (node.id) }
+			{#each $messages as node (node.id)}
 				<MessageNode {node} {setMessages} />
 			{/each}
 		{/if}
@@ -181,7 +184,6 @@
 								$regenerating = true;
 								currentNode.update(() => $messages[$messages.length - 2].id);
 								reload();
-                                
 							}}
 						>
 							<svg
@@ -204,7 +206,7 @@
 						</button>
 					{/if}
 				</div>
-			<AutosizingSearchBar
+				<AutosizingSearchBar
 					isLoading={$isLoading}
 					bind:value={$input}
 					on:submit={(e) => handleSubmit(e, { options: { body: { model: $gptModel } } })}
