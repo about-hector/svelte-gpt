@@ -4,8 +4,8 @@ import { Drawer } from 'ui/ui-primitives/drawer';
 
 </script>
 
-<div id='wrapper' class='flex justify-center items-center mx-auto h-full'>
-<Drawer.Root shouldScaleBackground={true}>
+<div id='wrapper' vaul-drawer-wrapper class='flex bg-white justify-center items-center mx-auto h-full'>
+<Drawer.Root shouldScaleBackground > 
 <Drawer.Trigger 
     class='rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
 >

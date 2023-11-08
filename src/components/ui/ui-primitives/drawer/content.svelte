@@ -53,6 +53,52 @@
 
 	const BORDER_RADIUS = 8;
 
+	/******************************************/
+
+	$: {
+		if ($rootCtx.open) {
+			scaleBackground(true);
+		}
+	}
+
+	function scaleBackground(open: boolean) {
+		const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+
+		if (!wrapper || !$rootCtx.shouldScaleBackground) return;
+
+		if (open) {
+			set(
+				document.body,
+				{
+					background: 'black'
+				},
+				true
+			);
+
+			set(wrapper, {
+				borderRadius: `${BORDER_RADIUS}px`,
+				overflow: 'hidden',
+				transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+				transformOrigin: 'top',
+				transitionProperty: 'transform, border-radius',
+				transitionDuration: `${TRANSITIONS.DURATION}s`,
+				transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+			});
+		} else {
+			// Exit
+			reset(wrapper, 'overflow');
+			reset(wrapper, 'transform');
+			reset(wrapper, 'borderRadius');
+			set(wrapper, {
+				transitionProperty: 'transform, border-radius',
+				transitionDuration: `${TRANSITIONS.DURATION}s`,
+				transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+			});
+		}
+	}
+
+	/*************************************************************************/
+
 	function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
 		let element = el as HTMLElement;
 		const date = new Date();
@@ -139,13 +185,15 @@
 		}
 	}
 
-	if (!$rootCtx.open && $rootCtx.shouldScaleBackground) {
-		// Can't use `onAnimationEnd` as the component will be unmounted by then
-		const id = setTimeout(() => {
-			reset(document.body);
-		}, 200);
+	$: {
+		if (!$rootCtx.open && $rootCtx.shouldScaleBackground) {
+			// Can't use `onAnimationEnd` as the component will be unmounted by then
+			const id = setTimeout(() => {
+				reset(document.body);
+			}, 200);
 
-		clearTimeout(id);
+		//	clearTimeout(id);
+		}
 	}
 
 	function onMove(event: PointerEvent) {
@@ -379,7 +427,6 @@
 
 <div
 	role="dialog"
-	{...$$restProps}
 	use:focusTrap={{ disable: !$rootCtx.modal, autofocus: openAutoFocus }}
 	use:dismissable={{
 		onPointerDownOutside: (event) => {
@@ -414,6 +461,7 @@
 	on:pointermove={(e) => onMove(e)}
 	on:pointerup={(e) => onRelease(e)}
 	use:useActions={use ?? []}
+{...$$restProps}
 	vaul-drawer
 >
 	<slot />
@@ -424,8 +472,12 @@
 		transform: translateY(var(--swipe-amount));
 		touch-action: none;
 		animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+		xtransform: translate3d(0, 100%, 0);
+		xtransition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 	}
-
+	[vaul-drawer][vaul-drawer-visible='true'] {
+		xtransform: translate3d(0, var(--snap-point-height, 0), 0);
+	}
 	[vaul-drawer]::after {
 		content: '';
 		position: absolute;
