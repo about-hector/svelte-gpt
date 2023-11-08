@@ -7,12 +7,14 @@
 	export let setMessages;
 
 	$: parent = node.parent;
-    
+
+
 	$: alternatives =
-		$messageTree[parent] && $messageTree[parent].children ? [...$messageTree[parent].children] : [];
-    $: currentAlternativeIndex = alternatives.length > 1 ? alternatives.indexOf(node.id) : 0;
-
-
+			$messageTree[parent] && $messageTree[parent].children
+				? [...$messageTree[parent].children]
+				: [];
+	
+	$: currentAlternativeIndex = alternatives.length > 1 ? alternatives.indexOf(node.id) : 1;
 
 	async function handleAlternative(map, nodeId) {
 		let newTree = await switchBranch(map, nodeId);
@@ -20,6 +22,7 @@
 		currentNode.update(() => newTree[newTree.length - 1].id);
 	}
 </script>
+
 <li
 	class={`${node.role === 'assistant' ? 'bg-[#444654]' : 'bg-[rgb(52,53,65)]'}
     `}
@@ -36,7 +39,6 @@
 						disabled={currentAlternativeIndex === 0}
 						on:click={() => {
 							handleAlternative($messageTree, alternatives[currentAlternativeIndex - 1]);
-							currentAlternativeIndex = currentAlternativeIndex - 1;
 						}}
 					>
 						<svg
@@ -53,14 +55,13 @@
 						>
 					</button>
 					<span class="text-xs flex-grow flex-shrink-0">
-                    {currentAlternativeIndex + 1} / {alternatives.length}
-                    </span>
+						{currentAlternativeIndex + 1} / {alternatives.length}
+					</span>
 					<button
 						class=" text-xs disabled:text-gray-300/60"
 						disabled={(currentAlternativeIndex % alternatives.length) + 1 === alternatives.length}
 						on:click={() => {
 							handleAlternative($messageTree, alternatives[currentAlternativeIndex + 1]);
-							currentAlternativeIndex = currentAlternativeIndex + 1;
 						}}
 					>
 						<svg

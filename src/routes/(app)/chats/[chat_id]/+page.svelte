@@ -58,21 +58,35 @@
 				$regenerating = false;
 				return;
 			}
+            
+            //IF NOT REGENERATING, THIS IS WHAT IS EXECUTED
             let question = $messages[$messages.length -2]
 			$messages[$messages.length - 1].parent = question.id;
-            console.log({$messageTree})
-			messageTree.update((tree) => {
-                console.log(question.id, $currentNode)
+
+
+            //this might be removed as soon as I refactor, doesn't seem particularly useful
+			/* messageTree.update((tree) => {
                 tree[question.id] = {
                     id: question.id,
                     children: [response.id],
                     parent: $currentNode,
                     role: question.role,
-                    content: question.content
+                    content: question.content,
+                    createdAt: question.createdAt
+                };
+
+                tree[$messages[$messages.length -1].id] = {
+                    id: response.id,
+                    children: [], 
+                    parent: question.id,
+                    role: response.role,
+                    content: response.content, 
+                    createdAt: response.createdAt
                 }
 				return tree;
 			});
-            console.log(`message tree after updating the question.id`, $messageTree)
+
+            */
 
 			const updatedChat = await fetch('/chats', {
 				method: 'PATCH',
@@ -134,6 +148,7 @@
 
 <div class="w-full overflow-y-scroll">
 	<SelectedModel model={data.model ? data.model : 'Unknown model'} />
+    {$currentNode}
 	<ul class="text-white">
 		{#if data.auth && !data.authorized}
 			<p>Unauthorized to read this chat</p>
@@ -152,7 +167,7 @@
 	>
 		<form
 			on:submit={(e) => handleSubmit(e, { options: { body: { model: $gptModel } } })}
-			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
+			class="relative stretch mx-2 flex flex-col gap-3 last:mb-1.5 md:mx-4 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
 			<div class="relative flex h-full flex-1 items-center flex-row-reverse sm:flex-col">
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">

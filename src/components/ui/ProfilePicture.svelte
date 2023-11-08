@@ -7,7 +7,7 @@
     if (user === 'user') {
         profileImage = `${$page.data.session?.user?.image}`
     } else if (user === 'assistant') {
-        profileImage = '/assistant-mock.jpeg'
+        profileImage = '/barabba.svg'
     }
 </script>
 
