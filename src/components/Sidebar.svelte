@@ -79,7 +79,7 @@ import {flip} from 'svelte/animate'
 	</div>
 {:else}
 	<div
-		class="flex-shrink-0 overflow-x-hidden bg-[rgb(32,33,35)] h-full p-2 flex flex-col z-10 absolute md:static"
+		class="flex-shrink-0 overflow-hidden bg-[rgb(32] p-2 flex flex-col z-10 absolute md:static"
 		use:clickOutside={exception}
 		on:click_outside={isMobile ? () => handleSidebar() : () => void 0}
 		style={`width: ${sidebarOpen ? '260px' : '0px'}; visibility: ${sidebarOpen ? null : 'hidden'} text-inherit`}
