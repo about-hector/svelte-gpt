@@ -112,7 +112,7 @@
 
 	onNavigate((navigation) => {
 		if (navigation.to && navigation.to.route.id === '/(app)') {
-			setMessages(() => []);
+			setMessages(() => ([]));
 			activeChat.update(() => '');
 			gptModel.update(() => DEFAULT_GPT_MODEL);
 			currentNode.update(() => '');
