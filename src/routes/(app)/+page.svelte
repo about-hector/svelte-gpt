@@ -107,7 +107,7 @@
 	>
 		<form
 			on:submit={(e) => handleSubmit(e, { options: { body: { model: $gptModel } } })}
-			class="relative stretch mx-2 flex flex-col gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
+			class="relative stretch mx-2 flex flex-col gap-3 last:mb-1.5 md:mx-4 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"
 		>
 			<div class="relative flex h-full flex-1 items-center flex-row-reverse md:flex-col">
 				<div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
