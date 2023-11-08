@@ -36,7 +36,7 @@
 	</div>
 {/if}
 
-<div class="flex w-full h-[100dvh] relative z-0 overflow-hidden text-inherit bg-[rgb(52,53,65)]" vaul-drawer-wrapper >
+<div class="flex w-full h-full relative z-0 overflow-hidden text-inherit bg-[rgb(52,53,65)]" vaul-drawer-wrapper >
 	<Sidebar session={$page.data.session} />
 	<main class="relative h-full max-w-full flex-1 overflow-hidden flex">
 		{#if $toasts}
