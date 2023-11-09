@@ -1,7 +1,7 @@
 <script>
 </script>
 
-<section class="bg-white h-screen w-screen flex">
+<section class="h-full w-full flex">
     <slot name='background' />
 	<slot name="login-panel" />
 </section>
