@@ -1,5 +1,5 @@
 TO-DO:
-
+- sort chats by today, this week, and then monthly
 - [ ] in the sidebar, the scrollbar appears on hover. on mobile it should work immediately.
 
 - [ ] Home and chats have 2 handlesubmit events, one on the autosizing bar and one on the form. I need to repeat the code every time and every change must be changed everywhere. fix it for composability
