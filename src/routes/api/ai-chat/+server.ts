@@ -31,9 +31,12 @@ export async function POST({ request }: { request: Request }) {
                     content: SYSTEM_PROMPT
                 },
                 ...conversation
-            ]
+            ],
+            temperature: 0.3,
+            frequency_penalty: 0.5,
+            presence_penalty: -0.5,
+            max_tokens: 2000,
             //user
-            //max-tokens
         });
 
         // Convert the response into a friendly text-stream
