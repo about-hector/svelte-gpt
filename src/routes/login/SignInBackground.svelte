@@ -13,7 +13,7 @@
 <style>
 	.background {
 		background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-			url('$lib/assets/background-1.jpeg');
+			url('$lib/assets/background-1.webp');
 		background-size: cover;
 		background-repeat: no-repeat;
 	}
@@ -21,7 +21,7 @@
 	@media (max-width: 768px) {
 		.background {
 			background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-				url('$lib/assets/background-openai.jpeg');
+				url('$lib/assets/background-openai.webp');
 			background-size: cover;
 		}
 	}
