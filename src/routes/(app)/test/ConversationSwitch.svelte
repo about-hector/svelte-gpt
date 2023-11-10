@@ -15,14 +15,13 @@
 
 {#if branches.length > 1}
 	<div
-		class="flex items-center justify-center gap-1 absolute left-0 top-2 -ml-4 -translate-x-full visible"
+		class="flex items-center gap-0.5 p-1.5"
 	>
 		<button
 			class=" text-xs disabled:text-gray-300/60"
 			disabled={currentBranch === 0}
 			on:click={() => {
 				handleAlternative($messageTree, branches[currentBranch - 1]);
-				currentBranch = currentBranch - 1;
 			}}
 		>
 			<svg
@@ -38,13 +37,12 @@
 				xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg
 			>
 		</button>
-		<span class="text-xs flex-grow flex-shrink-0">{currentBranch + 1} / {branches.length}</span>
+		<span class="text-xs">{currentBranch + 1} / {branches.length}</span>
 		<button
 			class=" text-xs disabled:text-gray-300/60"
 			disabled={(currentBranch % branches.length) + 1 === branches.length}
 			on:click={() => {
 				handleAlternative($messageTree, branches[currentBranch + 1]);
-				currentBranch = currentBranch + 1;
 			}}
 		>
 			<svg
