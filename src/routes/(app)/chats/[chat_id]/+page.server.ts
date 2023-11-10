@@ -48,7 +48,8 @@ export const load = async ({ params, cookies, event }) => {
             chatID: params.chat_id,
             chatHashmap: mapping,
             currentNode: chat.currentNode,
-            lastBranch: messages
+            lastBranch: messages,
+            title: chat.title
         };
     }
 };
