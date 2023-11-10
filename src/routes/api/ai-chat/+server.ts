@@ -32,7 +32,7 @@ export async function POST({ request }: { request: Request }) {
                 },
                 ...conversation
             ],
-            temperature: 0.3,
+            temperature: 0.4,
             frequency_penalty: 0.5,
             presence_penalty: -0.5,
             max_tokens: 2000,

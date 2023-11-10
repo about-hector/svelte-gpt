@@ -1,5 +1,4 @@
 import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { chatTitlePrompt } from '$lib/prompt_generators';
 import { getUserID } from '$lib/chatDB';
@@ -19,8 +18,8 @@ export async function POST({ request, cookies }) {
 	// Ask OpenAI for a streaming completion given the prompt
 	const response = await openai.completions.create({
 		model: 'text-davinci-003',
-		temperature: 0.2,
-		max_tokens: 15,
+		temperature: 0.6,
+		max_tokens: 20,
 		prompt: JSON.stringify(myPrompt)
 	});
 
@@ -38,8 +37,6 @@ export async function POST({ request, cookies }) {
 			title: true
 		}
 	});
-	// Convert the response into a friendly text-stream
-	// Respond with the stream
 
 	return json({ title: updateChat.title }, { status: 200 });
 }
