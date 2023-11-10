@@ -13,7 +13,11 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { prisma } from '$lib/server/prisma-client';
 
 async function authorization({ event, resolve }) {
-	if (!event.url.pathname.startsWith('/login')) {
+    if (process.env.VERCEL_ENV==='edge') {
+        return resolve(event);
+    };
+	
+    if (!event.url.pathname.startsWith('/login')) {
 		const session = await event.locals.getSession();
 		if (!session) {
 			throw redirect(303, '/login');
