@@ -10,9 +10,9 @@ const openai = new OpenAI({
 });
 
 // Set the runtime to edge for best performance, bugs the whole app though
-//export const config = {
-//  runtime: 'edge'
-//};
+export const config = {
+  runtime: 'edge'
+};
 
 export async function POST({ request }: { request: Request }) {
     try {
