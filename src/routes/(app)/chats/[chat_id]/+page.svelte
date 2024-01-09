@@ -5,7 +5,7 @@
 	import { afterNavigate, onNavigate } from '$app/navigation';
 	import ChatHistory from 'ui/ChatHistory.svelte';
 	import { DEFAULT_GPT_MODEL } from '$lib/costants';
-	import { gptModel, activeChat, toasts, messageTree, currentNode } from 'stores';
+	import { gptModel, activeChat, toasts, messageTree, currentNode, previousChats } from 'stores';
 	import SelectedModel from 'components/SelectedModel.svelte';
 	import { reconstructTree } from '$lib/chat_tree.js';
 	import MessageNode from '../../test/MessageNode.svelte';
@@ -142,7 +142,7 @@
 </script>
 
 <svelte:head>
-	<title>Chat Title</title>
+	<title>{data.title}</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 

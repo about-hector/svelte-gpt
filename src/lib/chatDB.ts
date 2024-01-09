@@ -11,7 +11,8 @@ export async function fetchChat(id: string, userId: string) {
 			select: {
 				messages: true,
 				model: true,
-                currentNode: true
+                currentNode: true,
+                title: true
 			}
 		});
 		return chat;

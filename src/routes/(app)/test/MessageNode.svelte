@@ -2,6 +2,7 @@
 	import ProfilePicture from 'ui/ProfilePicture.svelte';
 	import { switchBranch } from '$lib/chat_tree';
 	import { currentNode, messageTree } from 'stores';
+	import ConversationSwitch from './ConversationSwitch.svelte';
 
 	export let node;
 	export let setMessages;
@@ -24,15 +25,14 @@
 </script>
 
 <li
-	class={`${node.role === 'assistant' ? 'bg-[#444654]' : 'bg-[rgb(52,53,65)]'}
-    `}
+	class={`${node.role === 'assistant' ? 'bg-[#444654]' : 'bg-[rgb(52,53,65)]'}`}
 >
 	<div class="flex gap-4 justify-center p-4 md:py-6 md:gap-6 mx-auto flex-1 max-w-2xl">
 		<div class="flex relative items-end flex-col flex-shrink-0">
 			<ProfilePicture user={node.role} />
 			{#if alternatives.length > 1}
 				<div
-					class="flex items-center justify-center gap-1 absolute left-0 top-2 -ml-4 -translate-x-full visible"
+					class="md:flex items-center justify-center gap-1 absolute left-0 top-2 -ml-4 -translate-x-full hidden md:visible "
 				>
 					<button
 						class=" text-xs disabled:text-gray-300/60"
@@ -84,4 +84,9 @@
 			{node.content}
 		</div>
 	</div>
+    <!--
+    <div class="">
+        <ConversationSwitch currentBranch={currentAlternativeIndex} branches={alternatives} {setMessages} />
+    </div>
+    -->
 </li>
